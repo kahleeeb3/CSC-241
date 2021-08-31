@@ -12,24 +12,27 @@ aarch64-linux-gnu-gcc hello.c -S -o hello-arm.s
 - can automate this process of command typing using a "make file"
 - linux can hit tab and auto-complete
 
-## Executing
+**Executing wih qemu:**
 ```
 aarch64-linux-gnu-as hello-arm.s -o hello-arm.o
 aarch64-linux-gnu-gcc hello-arm.o -o hello-arm
 ./hello-arm
 ```
-- We get an error because it can compile arm code on an intel processor
-- So we use qemu
+- We get an error because it can't compile arm code on an intel processor. So we use qemu.
 ```
 qemu-aarch64 ./hello-arm
 ```
 - This is an emulator that translates arm code to Intel line by line
+- The is a limit to things you can do on an emulator.
+- The emulator will let you get away with things you cannot get on normal hardware.
+- [Assignment 00](https://wabash.instructure.com/courses/3326010/assignments/33946392)
+
 
 **hello.c from Day 01**
-```C
+```c
 #include <stdio.h> //Load in package
 
-int main(void){ // Returns int, takes in nothing
+int main(void){
     printf("Hello, world!\n");
     return 0;
 }
