@@ -53,3 +53,7 @@ $ git config credential.helper store
 Username for 'https://github.com': <USERNAME>
 Password for 'https://USERNAME@github.com': <PASSWORD>
 ```
+## Pushing to Github in a Single Command
+```
+cd /home/pi/Desktop/CSC-241; git add --all; git commit -a -m "{message}";git push
+```
