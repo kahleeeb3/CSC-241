@@ -4,14 +4,14 @@ Working on the Pi remotely.
 - Compiled Code will not run on two different machines. Only the compiled one.
 - Ubuntu App on PC in Root. Basically a striped down version of linux.
 - Version of gcc that spits out arm architecture code
-Cross Compile:
+**Cross Compile:**
 ```
 aarch64-linux-gnu-gcc hello.c -S -o hello-arm.s
 ```
 - can automate this process of command typing using a "make file"
 - linux can hit tab and auto-complete
 
-hello.c from Day 01
+**hello.c from Day 01**
 ```C
 #include <stdio.h> //Load in package
 
