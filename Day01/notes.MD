@@ -1,4 +1,4 @@
-# First Day
+# Day 01
 Shortcut to Home
 ```
 cd ~/
