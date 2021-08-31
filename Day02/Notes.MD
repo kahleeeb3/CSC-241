@@ -26,7 +26,7 @@ qemu-aarch64 ./hello-arm
 - The is a limit to things you can do on an emulator.
 - The emulator will let you get away with things you cannot get on normal hardware.
 - [Assignment 00](https://wabash.instructure.com/courses/3326010/assignments/33946392)
-
+- Beware Permission Errors
 
 **hello.c from Day 01**
 ```c
