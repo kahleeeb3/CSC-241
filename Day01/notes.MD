@@ -13,4 +13,5 @@ gcc hello.c -o hello
 gcc -S hello.c -o hello.s
 as hello.s -o hello.o   
 gcc hello.o -o hello
+./hello
 ```
