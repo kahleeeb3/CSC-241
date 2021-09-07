@@ -9,10 +9,8 @@ gdb ./example.1
 ## Fixing VSC
 > https://github.com/liximomo/vscode-sftp/issues/915#issuecomment-833144280
 
-```
 c:\Users<username>.vscode\extensions\liximomo.sftp-1.12.9\node_modules\ssh2-streams\lib\sftp.js
 line: 388
-```
 ```
 if (code === STATUS_CODE.OK) {
 ```
