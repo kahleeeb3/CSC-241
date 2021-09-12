@@ -1,4 +1,16 @@
 # CSC-241 Commands
+aarch64 executable
+```
+gcc filename.c -S -o filename.s
+as filename.s -o filename.o
+gcc filename.o -o filename
+./filename
+```
+aarch64 listing file
+```
+as -a filename.s > filename.lst
+```
+ 
 Zipping a file
 ```
 zip -r archivename.zip directory_name
