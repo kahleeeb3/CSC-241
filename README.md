@@ -1,3 +1,8 @@
+# CSC-241 Commands
+Zipping a file
+```
+zip -r archivename.zip directory_name
+```
 # Linux Terminal Notes
 Running commands from root user:
 ```

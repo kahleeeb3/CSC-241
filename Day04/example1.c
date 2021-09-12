@@ -12,8 +12,11 @@ int fact1(int x){
 }
 
 int main(void){
-    int num = 4;
-    int ans = fact1(num);
+    //int num = 4;
+    //int ans = fact1(num);
     //printf("The number is %i. I repeat, the number is %i\n",ans,ans);
-    printf("%i\n",ans);
+    //printf("%i\n",ans);
+    char mystring[5] = "Hello";
+    printf("%s\n",mystring);
+    return 0;22
 }

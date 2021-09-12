@@ -1,0 +1,158 @@
+AARCH64 GAS  fibonacci.s 			page 1
+
+
+   1              		.arch armv8-a
+   2              		.file	"fibonacci.c"
+   3              		.text
+   4              		.align	2
+   5              		.global	fibstep
+   6              		.type	fibstep, %function
+   7              	fibstep:
+   8              	.LFB0:
+   9              		.cfi_startproc
+  10 0000 FD7BBDA9 		stp	x29, x30, [sp, -48]!
+  11              		.cfi_def_cfa_offset 48
+  12              		.cfi_offset 29, -48
+  13              		.cfi_offset 30, -40
+  14 0004 FD030091 		mov	x29, sp
+  15 0008 E01F00B9 		str	w0, [sp, 28]
+  16 000c E11B00B9 		str	w1, [sp, 24]
+  17 0010 E21700B9 		str	w2, [sp, 20]
+  18 0014 E01740B9 		ldr	w0, [sp, 20]
+  19 0018 1F080071 		cmp	w0, 2
+  20 001c 8D010054 		ble	.L2
+  21 0020 E11F40B9 		ldr	w1, [sp, 28]
+  22 0024 E01B40B9 		ldr	w0, [sp, 24]
+  23 0028 2000000B 		add	w0, w1, w0
+  24 002c E02F00B9 		str	w0, [sp, 44]
+  25 0030 E01740B9 		ldr	w0, [sp, 20]
+  26 0034 00040051 		sub	w0, w0, #1
+  27 0038 E203002A 		mov	w2, w0
+  28 003c E11F40B9 		ldr	w1, [sp, 28]
+  29 0040 E02F40B9 		ldr	w0, [sp, 44]
+  30 0044 00000094 		bl	fibstep
+  31 0048 02000014 		b	.L1
+  32              	.L2:
+  33 004c E01F40B9 		ldr	w0, [sp, 28]
+  34              	.L1:
+  35 0050 FD7BC3A8 		ldp	x29, x30, [sp], 48
+  36              		.cfi_restore 30
+  37              		.cfi_restore 29
+  38              		.cfi_def_cfa_offset 0
+  39 0054 C0035FD6 		ret
+  40              		.cfi_endproc
+  41              	.LFE0:
+  42              		.size	fibstep, .-fibstep
+  43              		.align	2
+  44              		.global	fibonacci
+  45              		.type	fibonacci, %function
+  46              	fibonacci:
+  47              	.LFB1:
+  48              		.cfi_startproc
+  49 0058 FF8300D1 		sub	sp, sp, #32
+  50              		.cfi_def_cfa_offset 32
+  51 005c E00F00B9 		str	w0, [sp, 12]
+  52 0060 20008052 		mov	w0, 1
+  53 0064 E01F00B9 		str	w0, [sp, 28]
+  54 0068 20008052 		mov	w0, 1
+  55 006c E01B00B9 		str	w0, [sp, 24]
+  56 0070 20008052 		mov	w0, 1
+  57 0074 E01700B9 		str	w0, [sp, 20]
+AARCH64 GAS  fibonacci.s 			page 2
+
+
+  58 0078 0C000014 		b	.L6
+  59              	.L7:
+  60 007c E11F40B9 		ldr	w1, [sp, 28]
+  61 0080 E01B40B9 		ldr	w0, [sp, 24]
+  62 0084 2000000B 		add	w0, w1, w0
+  63 0088 E01700B9 		str	w0, [sp, 20]
+  64 008c E01F40B9 		ldr	w0, [sp, 28]
+  65 0090 E01B00B9 		str	w0, [sp, 24]
+  66 0094 E01740B9 		ldr	w0, [sp, 20]
+  67 0098 E01F00B9 		str	w0, [sp, 28]
+  68 009c E00F40B9 		ldr	w0, [sp, 12]
+  69 00a0 00040051 		sub	w0, w0, #1
+  70 00a4 E00F00B9 		str	w0, [sp, 12]
+  71              	.L6:
+  72 00a8 E00F40B9 		ldr	w0, [sp, 12]
+  73 00ac 1F080071 		cmp	w0, 2
+  74 00b0 6CFEFF54 		bgt	.L7
+  75 00b4 E01740B9 		ldr	w0, [sp, 20]
+  76 00b8 FF830091 		add	sp, sp, 32
+  77              		.cfi_def_cfa_offset 0
+  78 00bc C0035FD6 		ret
+  79              		.cfi_endproc
+  80              	.LFE1:
+  81              		.size	fibonacci, .-fibonacci
+  82              		.section	.rodata
+  83              		.align	3
+  84              	.LC0:
+  85 0000 52656375 		.string	"Recursive: %i \n"
+  85      72736976 
+  85      653A2025 
+  85      69200A00 
+  86              		.align	3
+  87              	.LC1:
+  88 0010 49746572 		.string	"Iterative: %i \n"
+  88      61746976 
+  88      653A2025 
+  88      69200A00 
+  89              		.text
+  90              		.align	2
+  91              		.global	main
+  92              		.type	main, %function
+  93              	main:
+  94              	.LFB2:
+  95              		.cfi_startproc
+  96 00c0 FD7BBEA9 		stp	x29, x30, [sp, -32]!
+  97              		.cfi_def_cfa_offset 32
+  98              		.cfi_offset 29, -32
+  99              		.cfi_offset 30, -24
+ 100 00c4 FD030091 		mov	x29, sp
+ 101 00c8 40018052 		mov	w0, 10
+ 102 00cc E01F00B9 		str	w0, [sp, 28]
+ 103 00d0 E21F40B9 		ldr	w2, [sp, 28]
+ 104 00d4 21008052 		mov	w1, 1
+ 105 00d8 20008052 		mov	w0, 1
+ 106 00dc 00000094 		bl	fibstep
+ 107 00e0 E01B00B9 		str	w0, [sp, 24]
+ 108 00e4 E01F40B9 		ldr	w0, [sp, 28]
+AARCH64 GAS  fibonacci.s 			page 3
+
+
+ 109 00e8 00000094 		bl	fibonacci
+ 110 00ec E01700B9 		str	w0, [sp, 20]
+ 111 00f0 E11B40B9 		ldr	w1, [sp, 24]
+ 112 00f4 00000090 		adrp	x0, .LC0
+ 113 00f8 00000091 		add	x0, x0, :lo12:.LC0
+ 114 00fc 00000094 		bl	printf
+ 115 0100 E11740B9 		ldr	w1, [sp, 20]
+ 116 0104 00000090 		adrp	x0, .LC1
+ 117 0108 00000091 		add	x0, x0, :lo12:.LC1
+ 118 010c 00000094 		bl	printf
+ 119 0110 00008052 		mov	w0, 0
+ 120 0114 FD7BC2A8 		ldp	x29, x30, [sp], 32
+ 121              		.cfi_restore 30
+ 122              		.cfi_restore 29
+ 123              		.cfi_def_cfa_offset 0
+ 124 0118 C0035FD6 		ret
+ 125              		.cfi_endproc
+ 126              	.LFE2:
+ 127              		.size	main, .-main
+ 128              		.ident	"GCC: (Debian 8.3.0-6) 8.3.0"
+ 129              		.section	.note.GNU-stack,"",@progbits
+AARCH64 GAS  fibonacci.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 fibonacci.c
+         fibonacci.s:4      .text:0000000000000000 $x
+         fibonacci.s:7      .text:0000000000000000 fibstep
+         fibonacci.s:46     .text:0000000000000058 fibonacci
+         fibonacci.s:83     .rodata:0000000000000000 $d
+         fibonacci.s:93     .text:00000000000000c0 main
+                        .eh_frame:0000000000000014 $d
+
+UNDEFINED SYMBOLS
+printf
