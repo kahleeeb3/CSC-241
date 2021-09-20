@@ -1,0 +1,285 @@
+AARCH64 GAS  file.s 			page 1
+
+
+   1              		.arch armv8-a
+   2              		.file	"file.c"
+   3              		.text
+   4              		.align	2
+   5              		.global	upper
+   6              		.type	upper, %function
+   7              	upper:
+   8              	.LFB0:
+   9              		.cfi_startproc
+  10 0000 FF8300D1 		sub	sp, sp, #32
+  11              		.cfi_def_cfa_offset 32
+  12 0004 E00700F9 		str	x0, [sp, 8]
+  13 0008 E10700B9 		str	w1, [sp, 4]
+  14 000c FF1F00B9 		str	wzr, [sp, 28]
+  15 0010 1A000014 		b	.L2
+  16              	.L4:
+  17 0014 E01F80B9 		ldrsw	x0, [sp, 28]
+  18 0018 E10740F9 		ldr	x1, [sp, 8]
+  19 001c 2000008B 		add	x0, x1, x0
+  20 0020 00004039 		ldrb	w0, [x0]
+  21 0024 1F800171 		cmp	w0, 96
+  22 0028 29020054 		bls	.L3
+  23 002c E01F80B9 		ldrsw	x0, [sp, 28]
+  24 0030 E10740F9 		ldr	x1, [sp, 8]
+  25 0034 2000008B 		add	x0, x1, x0
+  26 0038 00004039 		ldrb	w0, [x0]
+  27 003c 1FE80171 		cmp	w0, 122
+  28 0040 68010054 		bhi	.L3
+  29 0044 E01F80B9 		ldrsw	x0, [sp, 28]
+  30 0048 E10740F9 		ldr	x1, [sp, 8]
+  31 004c 2000008B 		add	x0, x1, x0
+  32 0050 01004039 		ldrb	w1, [x0]
+  33 0054 E01F80B9 		ldrsw	x0, [sp, 28]
+  34 0058 E20740F9 		ldr	x2, [sp, 8]
+  35 005c 4000008B 		add	x0, x2, x0
+  36 0060 21800051 		sub	w1, w1, #32
+  37 0064 211C0012 		and	w1, w1, 255
+  38 0068 01000039 		strb	w1, [x0]
+  39              	.L3:
+  40 006c E01F40B9 		ldr	w0, [sp, 28]
+  41 0070 00040011 		add	w0, w0, 1
+  42 0074 E01F00B9 		str	w0, [sp, 28]
+  43              	.L2:
+  44 0078 E11F40B9 		ldr	w1, [sp, 28]
+  45 007c E00740B9 		ldr	w0, [sp, 4]
+  46 0080 3F00006B 		cmp	w1, w0
+  47 0084 8BFCFF54 		blt	.L4
+  48 0088 1F2003D5 		nop
+  49 008c FF830091 		add	sp, sp, 32
+  50              		.cfi_def_cfa_offset 0
+  51 0090 C0035FD6 		ret
+  52              		.cfi_endproc
+  53              	.LFE0:
+  54              		.size	upper, .-upper
+  55              		.align	2
+  56              		.global	upper2
+  57              		.type	upper2, %function
+AARCH64 GAS  file.s 			page 2
+
+
+  58              	upper2:
+  59              	.LFB1:
+  60              		.cfi_startproc
+  61 0094 FF8300D1 		sub	sp, sp, #32
+  62              		.cfi_def_cfa_offset 32
+  63 0098 E00700F9 		str	x0, [sp, 8]
+  64 009c FF1F00B9 		str	wzr, [sp, 28]
+  65 00a0 1A000014 		b	.L6
+  66              	.L8:
+  67 00a4 E01F80B9 		ldrsw	x0, [sp, 28]
+  68 00a8 E10740F9 		ldr	x1, [sp, 8]
+  69 00ac 2000008B 		add	x0, x1, x0
+  70 00b0 00004039 		ldrb	w0, [x0]
+  71 00b4 1F800171 		cmp	w0, 96
+  72 00b8 29020054 		bls	.L7
+  73 00bc E01F80B9 		ldrsw	x0, [sp, 28]
+  74 00c0 E10740F9 		ldr	x1, [sp, 8]
+  75 00c4 2000008B 		add	x0, x1, x0
+  76 00c8 00004039 		ldrb	w0, [x0]
+  77 00cc 1FE80171 		cmp	w0, 122
+  78 00d0 68010054 		bhi	.L7
+  79 00d4 E01F80B9 		ldrsw	x0, [sp, 28]
+  80 00d8 E10740F9 		ldr	x1, [sp, 8]
+  81 00dc 2000008B 		add	x0, x1, x0
+  82 00e0 01004039 		ldrb	w1, [x0]
+  83 00e4 E01F80B9 		ldrsw	x0, [sp, 28]
+  84 00e8 E20740F9 		ldr	x2, [sp, 8]
+  85 00ec 4000008B 		add	x0, x2, x0
+  86 00f0 21800051 		sub	w1, w1, #32
+  87 00f4 211C0012 		and	w1, w1, 255
+  88 00f8 01000039 		strb	w1, [x0]
+  89              	.L7:
+  90 00fc E01F40B9 		ldr	w0, [sp, 28]
+  91 0100 00040011 		add	w0, w0, 1
+  92 0104 E01F00B9 		str	w0, [sp, 28]
+  93              	.L6:
+  94 0108 E01F80B9 		ldrsw	x0, [sp, 28]
+  95 010c E10740F9 		ldr	x1, [sp, 8]
+  96 0110 2000008B 		add	x0, x1, x0
+  97 0114 00004039 		ldrb	w0, [x0]
+  98 0118 1F000071 		cmp	w0, 0
+  99 011c 41FCFF54 		bne	.L8
+ 100 0120 1F2003D5 		nop
+ 101 0124 FF830091 		add	sp, sp, 32
+ 102              		.cfi_def_cfa_offset 0
+ 103 0128 C0035FD6 		ret
+ 104              		.cfi_endproc
+ 105              	.LFE1:
+ 106              		.size	upper2, .-upper2
+ 107              		.section	.rodata
+ 108              		.align	3
+ 109              	.LC1:
+ 110 0000 53747269 		.string	"String1: %s\n"
+ 110      6E67313A 
+ 110      2025730A 
+ 110      00
+ 111 000d 000000   		.align	3
+AARCH64 GAS  file.s 			page 3
+
+
+ 112              	.LC2:
+ 113 0010 53747269 		.string	"String2: %s\n"
+ 113      6E67323A 
+ 113      2025730A 
+ 113      00
+ 114 001d 000000   		.align	3
+ 115              	.LC3:
+ 116 0020 53747269 		.string	"String3: %s\n"
+ 116      6E67333A 
+ 116      2025730A 
+ 116      00
+ 117 002d 000000   		.align	3
+ 118              	.LC4:
+ 119 0030 506F696E 		.string	"Pointer String1: 0x%lx\n"
+ 119      74657220 
+ 119      53747269 
+ 119      6E67313A 
+ 119      20307825 
+ 120              		.align	3
+ 121              	.LC5:
+ 122 0048 506F696E 		.string	"Pointer String2: 0x%lx\n"
+ 122      74657220 
+ 122      53747269 
+ 122      6E67323A 
+ 122      20307825 
+ 123              		.align	3
+ 124              	.LC6:
+ 125 0060 506F696E 		.string	"Pointer String3: 0x%lx\n"
+ 125      74657220 
+ 125      53747269 
+ 125      6E67333A 
+ 125      20307825 
+ 126              		.text
+ 127              		.align	2
+ 128              		.global	main
+ 129              		.type	main, %function
+ 130              	main:
+ 131              	.LFB2:
+ 132              		.cfi_startproc
+ 133 012c FD7BBCA9 		stp	x29, x30, [sp, -64]!
+ 134              		.cfi_def_cfa_offset 64
+ 135              		.cfi_offset 29, -64
+ 136              		.cfi_offset 30, -56
+ 137 0130 FD030091 		mov	x29, sp
+ 138 0134 00000090 		adrp	x0, .LC0
+ 139 0138 01000091 		add	x1, x0, :lo12:.LC0
+ 140 013c E0C30091 		add	x0, sp, 48
+ 141 0140 220040F9 		ldr	x2, [x1]
+ 142 0144 020000F9 		str	x2, [x0]
+ 143 0148 215040F8 		ldr	x1, [x1, 5]
+ 144 014c 015000F8 		str	x1, [x0, 5]
+ 145 0150 00000090 		adrp	x0, .LC0
+ 146 0154 01000091 		add	x1, x0, :lo12:.LC0
+ 147 0158 E0830091 		add	x0, sp, 32
+ 148 015c 220040F9 		ldr	x2, [x1]
+ 149 0160 020000F9 		str	x2, [x0]
+ 150 0164 215040F8 		ldr	x1, [x1, 5]
+AARCH64 GAS  file.s 			page 4
+
+
+ 151 0168 015000F8 		str	x1, [x0, 5]
+ 152 016c 00000090 		adrp	x0, .LC0
+ 153 0170 01000091 		add	x1, x0, :lo12:.LC0
+ 154 0174 E0430091 		add	x0, sp, 16
+ 155 0178 220040F9 		ldr	x2, [x1]
+ 156 017c 020000F9 		str	x2, [x0]
+ 157 0180 215040F8 		ldr	x1, [x1, 5]
+ 158 0184 015000F8 		str	x1, [x0, 5]
+ 159 0188 E0C30091 		add	x0, sp, 48
+ 160 018c E10300AA 		mov	x1, x0
+ 161 0190 00000090 		adrp	x0, .LC1
+ 162 0194 00000091 		add	x0, x0, :lo12:.LC1
+ 163 0198 00000094 		bl	printf
+ 164 019c E0830091 		add	x0, sp, 32
+ 165 01a0 E10300AA 		mov	x1, x0
+ 166 01a4 00000090 		adrp	x0, .LC2
+ 167 01a8 00000091 		add	x0, x0, :lo12:.LC2
+ 168 01ac 00000094 		bl	printf
+ 169 01b0 E0430091 		add	x0, sp, 16
+ 170 01b4 E10300AA 		mov	x1, x0
+ 171 01b8 00000090 		adrp	x0, .LC3
+ 172 01bc 00000091 		add	x0, x0, :lo12:.LC3
+ 173 01c0 00000094 		bl	printf
+ 174 01c4 40018052 		mov	w0, 10
+ 175 01c8 00000094 		bl	putchar
+ 176 01cc E0830091 		add	x0, sp, 32
+ 177 01d0 00000094 		bl	strlen
+ 178 01d4 E103002A 		mov	w1, w0
+ 179 01d8 E0830091 		add	x0, sp, 32
+ 180 01dc 00000094 		bl	upper
+ 181 01e0 E0430091 		add	x0, sp, 16
+ 182 01e4 00000094 		bl	upper2
+ 183 01e8 E0C30091 		add	x0, sp, 48
+ 184 01ec E10300AA 		mov	x1, x0
+ 185 01f0 00000090 		adrp	x0, .LC1
+ 186 01f4 00000091 		add	x0, x0, :lo12:.LC1
+ 187 01f8 00000094 		bl	printf
+ 188 01fc E0830091 		add	x0, sp, 32
+ 189 0200 E10300AA 		mov	x1, x0
+ 190 0204 00000090 		adrp	x0, .LC2
+ 191 0208 00000091 		add	x0, x0, :lo12:.LC2
+ 192 020c 00000094 		bl	printf
+ 193 0210 E0430091 		add	x0, sp, 16
+ 194 0214 E10300AA 		mov	x1, x0
+ 195 0218 00000090 		adrp	x0, .LC3
+ 196 021c 00000091 		add	x0, x0, :lo12:.LC3
+ 197 0220 00000094 		bl	printf
+ 198 0224 40018052 		mov	w0, 10
+ 199 0228 00000094 		bl	putchar
+ 200 022c E0C30091 		add	x0, sp, 48
+ 201 0230 E10300AA 		mov	x1, x0
+ 202 0234 00000090 		adrp	x0, .LC4
+ 203 0238 00000091 		add	x0, x0, :lo12:.LC4
+ 204 023c 00000094 		bl	printf
+ 205 0240 E0830091 		add	x0, sp, 32
+ 206 0244 E10300AA 		mov	x1, x0
+ 207 0248 00000090 		adrp	x0, .LC5
+AARCH64 GAS  file.s 			page 5
+
+
+ 208 024c 00000091 		add	x0, x0, :lo12:.LC5
+ 209 0250 00000094 		bl	printf
+ 210 0254 E0430091 		add	x0, sp, 16
+ 211 0258 E10300AA 		mov	x1, x0
+ 212 025c 00000090 		adrp	x0, .LC6
+ 213 0260 00000091 		add	x0, x0, :lo12:.LC6
+ 214 0264 00000094 		bl	printf
+ 215 0268 00008052 		mov	w0, 0
+ 216 026c FD7BC4A8 		ldp	x29, x30, [sp], 64
+ 217              		.cfi_restore 30
+ 218              		.cfi_restore 29
+ 219              		.cfi_def_cfa_offset 0
+ 220 0270 C0035FD6 		ret
+ 221              		.cfi_endproc
+ 222              	.LFE2:
+ 223              		.size	main, .-main
+ 224              		.section	.rodata
+ 225              		.align	3
+ 226              	.LC0:
+ 227 0078 43616C65 		.string	"Caleb Powell"
+ 227      6220506F 
+ 227      77656C6C 
+ 227      00
+ 228              		.text
+ 229              		.ident	"GCC: (Debian 8.3.0-6) 8.3.0"
+ 230              		.section	.note.GNU-stack,"",@progbits
+AARCH64 GAS  file.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 file.c
+              file.s:4      .text:0000000000000000 $x
+              file.s:7      .text:0000000000000000 upper
+              file.s:58     .text:0000000000000094 upper2
+              file.s:108    .rodata:0000000000000000 $d
+              file.s:130    .text:000000000000012c main
+                        .eh_frame:0000000000000014 $d
+
+UNDEFINED SYMBOLS
+printf
+putchar
+strlen
