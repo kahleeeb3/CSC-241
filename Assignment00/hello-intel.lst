@@ -1,0 +1,51 @@
+AARCH64 GAS  hello-intel.s 			page 1
+
+
+   1              		.arch armv8-a
+   2              		.file	"hello.c"
+   3              		.text
+   4              		.section	.rodata
+   5              		.align	3
+   6              	.LC0:
+   7 0000 43616C65 		.string	"Caleb Powell!"
+   7      6220506F 
+   7      77656C6C 
+   7      2100
+   8              		.text
+   9              		.align	2
+  10              		.global	main
+  11              		.type	main, %function
+  12              	main:
+  13              	.LFB0:
+  14              		.cfi_startproc
+  15 0000 FD7BBFA9 		stp	x29, x30, [sp, -16]!
+  16              		.cfi_def_cfa_offset 16
+  17              		.cfi_offset 29, -16
+  18              		.cfi_offset 30, -8
+  19 0004 FD030091 		mov	x29, sp
+  20 0008 00000090 		adrp	x0, .LC0
+  21 000c 00000091 		add	x0, x0, :lo12:.LC0
+  22 0010 00000094 		bl	puts
+  23 0014 00008052 		mov	w0, 0
+  24 0018 FD7BC1A8 		ldp	x29, x30, [sp], 16
+  25              		.cfi_restore 30
+  26              		.cfi_restore 29
+  27              		.cfi_def_cfa_offset 0
+  28 001c C0035FD6 		ret
+  29              		.cfi_endproc
+  30              	.LFE0:
+  31              		.size	main, .-main
+  32              		.ident	"GCC: (Debian 8.3.0-6) 8.3.0"
+  33              		.section	.note.GNU-stack,"",@progbits
+AARCH64 GAS  hello-intel.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 hello.c
+       hello-intel.s:5      .rodata:0000000000000000 $d
+       hello-intel.s:9      .text:0000000000000000 $x
+       hello-intel.s:12     .text:0000000000000000 main
+                        .eh_frame:0000000000000014 $d
+
+UNDEFINED SYMBOLS
+puts

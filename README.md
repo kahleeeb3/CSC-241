@@ -16,13 +16,23 @@ gcc filename.o -o filename
 ```
 
 ---
+## Cross Compiling for ARM
+```
+aarch64-linux-gnu-gcc hello.c -S -o hello-cross.s
+aarch64-linux-gnu-as hello-cross.s -o hello-cross.o
+aarch64-linux-gnu-gcc hello-cross.o -static -o hello-cross
+qemu-aarch64 ./hello-cross
+aarch64-linux-gnu-as -a hello-cross.s > hello-cross.lst
+```
+
+---
 ## Additional Stuff
 
-> Zipping a file
+Zipping a file
 ```
 zip -r archivename.zip directory_name
 ```
-> Shell Script Permissions
+Shell Script Permissions
 ```
 chmod +x files.sh
 ```
