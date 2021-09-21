@@ -1,13 +1,13 @@
 # CSC-241 Commands
-> An assembly .s file
+An assembly aarch64 .s file
 ```
 gcc file.c -S -o file.s
 ```
-> An assembly .lst listing file
+An assembly aarch64 .lst listing file
 ```
 as -a file.s > file.lst
 ```
-> aarch64 executable
+aarch64 executable
 ```
 gcc filename.c -S -o filename.s
 as filename.s -o filename.o
@@ -16,7 +16,7 @@ gcc filename.o -o filename
 ```
 
 ---
-Additional Stuff
+## Additional Stuff
 
 > Zipping a file
 ```
