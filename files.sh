@@ -7,5 +7,4 @@ gcc ${x}.c -S -o ${x}.s;
 as -a ${x}.s > ${x}.lst;
 gcc ${x}.c -o ${x};
 rm a.out;
-zip -r ${x}.zip /home/pi/Desktop/${y};
 echo "Complete!"
