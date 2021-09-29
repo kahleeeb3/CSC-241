@@ -9,6 +9,6 @@ as -a ${x}.s > ${x}.lst;
 gcc ${x}.c -o ${x};
 rm a.out;
 cd /home/pi/Desktop/CSC-241/
-zip -r ${x}.zip ${y};
+zip -r output.zip ${y};
 ./github.sh;
 echo "Complete!"
