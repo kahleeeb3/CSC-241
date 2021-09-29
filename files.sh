@@ -1,6 +1,7 @@
 echo "Enter folder name in /home/pi/Desktop/CSC-241/"
 read y
 cd /home/pi/Desktop/CSC-241/${y}
+echo ${y}
 echo "Enter Your file name without extension: "
 read x
 gcc ${x}.c -S -o ${x}.s;
