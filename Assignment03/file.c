@@ -2,10 +2,14 @@
 #include<string.h>
 #include<ctype.h> 
 
+void flush();
+
+
 int choose(){
     int a;
     printf("Choose:\n(1) Use the built-in function.\n(2) Use my function.\n");
     scanf("%i",&a);
+    flush();
     if(a == 1 | a == 2){
         printf("You chose %i\n",a);
     }
@@ -55,4 +59,9 @@ int main(void){
     }
     printf("Output: %s\n",mystring);
     
+}
+
+void flush(){
+    char TEMPCHARBUF;
+    while((TEMPCHARBUF=getchar()) != EOF && TEMPCHARBUF != '\n');
 }

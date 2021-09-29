@@ -34,6 +34,7 @@ choose:
 	adrp	x0, .LC1
 	add	x0, x0, :lo12:.LC1
 	bl	__isoc99_scanf
+	bl	flush
 	ldr	w0, [sp, 28]
 	cmp	w0, 1
 	cset	w0, eq
@@ -250,5 +251,32 @@ main:
 	.cfi_endproc
 .LFE9:
 	.size	main, .-main
+	.align	2
+	.global	flush
+	.type	flush, %function
+flush:
+.LFB10:
+	.cfi_startproc
+	stp	x29, x30, [sp, -32]!
+	.cfi_def_cfa_offset 32
+	.cfi_offset 29, -32
+	.cfi_offset 30, -24
+	mov	x29, sp
+	nop
+.L18:
+	bl	getchar
+	strb	w0, [sp, 31]
+	ldrb	w0, [sp, 31]
+	cmp	w0, 10
+	bne	.L18
+	nop
+	ldp	x29, x30, [sp], 32
+	.cfi_restore 30
+	.cfi_restore 29
+	.cfi_def_cfa_offset 0
+	ret
+	.cfi_endproc
+.LFE10:
+	.size	flush, .-flush
 	.ident	"GCC: (Debian 8.3.0-6) 8.3.0"
 	.section	.note.GNU-stack,"",@progbits

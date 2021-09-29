@@ -49,253 +49,284 @@ AARCH64 GAS  file.s 			page 1
   34 001c 00000090 		adrp	x0, .LC1
   35 0020 00000091 		add	x0, x0, :lo12:.LC1
   36 0024 00000094 		bl	__isoc99_scanf
-  37 0028 E01F40B9 		ldr	w0, [sp, 28]
-  38 002c 1F040071 		cmp	w0, 1
-  39 0030 E0179F1A 		cset	w0, eq
-  40 0034 011C0012 		and	w1, w0, 255
-  41 0038 E01F40B9 		ldr	w0, [sp, 28]
-  42 003c 1F080071 		cmp	w0, 2
-  43 0040 E0179F1A 		cset	w0, eq
-  44 0044 001C0012 		and	w0, w0, 255
-  45 0048 2000002A 		orr	w0, w1, w0
+  37 0028 00000094 		bl	flush
+  38 002c E01F40B9 		ldr	w0, [sp, 28]
+  39 0030 1F040071 		cmp	w0, 1
+  40 0034 E0179F1A 		cset	w0, eq
+  41 0038 011C0012 		and	w1, w0, 255
+  42 003c E01F40B9 		ldr	w0, [sp, 28]
+  43 0040 1F080071 		cmp	w0, 2
+  44 0044 E0179F1A 		cset	w0, eq
+  45 0048 001C0012 		and	w0, w0, 255
 AARCH64 GAS  file.s 			page 2
 
 
-  46 004c 001C0012 		and	w0, w0, 255
-  47 0050 1F000071 		cmp	w0, 0
-  48 0054 E0000054 		beq	.L2
-  49 0058 E01F40B9 		ldr	w0, [sp, 28]
-  50 005c E103002A 		mov	w1, w0
-  51 0060 00000090 		adrp	x0, .LC2
-  52 0064 00000091 		add	x0, x0, :lo12:.LC2
-  53 0068 00000094 		bl	printf
-  54 006c 08000014 		b	.L3
-  55              	.L2:
-  56 0070 E01F40B9 		ldr	w0, [sp, 28]
-  57 0074 E103002A 		mov	w1, w0
-  58 0078 00000090 		adrp	x0, .LC3
-  59 007c 00000091 		add	x0, x0, :lo12:.LC3
-  60 0080 00000094 		bl	printf
-  61 0084 00000094 		bl	choose
-  62 0088 E01F00B9 		str	w0, [sp, 28]
-  63              	.L3:
-  64 008c E01F40B9 		ldr	w0, [sp, 28]
-  65 0090 FD7BC2A8 		ldp	x29, x30, [sp], 32
-  66              		.cfi_restore 30
-  67              		.cfi_restore 29
-  68              		.cfi_def_cfa_offset 0
-  69 0094 C0035FD6 		ret
-  70              		.cfi_endproc
-  71              	.LFE6:
-  72              		.size	choose, .-choose
-  73              		.align	2
-  74              		.global	upper
-  75              		.type	upper, %function
-  76              	upper:
-  77              	.LFB7:
-  78              		.cfi_startproc
-  79 0098 FD7BBDA9 		stp	x29, x30, [sp, -48]!
-  80              		.cfi_def_cfa_offset 48
-  81              		.cfi_offset 29, -48
-  82              		.cfi_offset 30, -40
-  83 009c FD030091 		mov	x29, sp
-  84 00a0 E00F00F9 		str	x0, [sp, 24]
-  85 00a4 FF2F00B9 		str	wzr, [sp, 44]
-  86 00a8 1B000014 		b	.L6
-  87              	.L8:
-  88 00ac E02F80B9 		ldrsw	x0, [sp, 44]
-  89 00b0 E10F40F9 		ldr	x1, [sp, 24]
-  90 00b4 2000008B 		add	x0, x1, x0
-  91 00b8 00004039 		ldrb	w0, [x0]
-  92 00bc 1F800171 		cmp	w0, 96
-  93 00c0 49020054 		bls	.L7
-  94 00c4 E02F80B9 		ldrsw	x0, [sp, 44]
-  95 00c8 E10F40F9 		ldr	x1, [sp, 24]
-  96 00cc 2000008B 		add	x0, x1, x0
-  97 00d0 00004039 		ldrb	w0, [x0]
-  98 00d4 1FE80171 		cmp	w0, 122
-  99 00d8 88010054 		bhi	.L7
- 100 00dc E02F80B9 		ldrsw	x0, [sp, 44]
- 101 00e0 E10F40F9 		ldr	x1, [sp, 24]
- 102 00e4 2000008B 		add	x0, x1, x0
+  46 004c 2000002A 		orr	w0, w1, w0
+  47 0050 001C0012 		and	w0, w0, 255
+  48 0054 1F000071 		cmp	w0, 0
+  49 0058 E0000054 		beq	.L2
+  50 005c E01F40B9 		ldr	w0, [sp, 28]
+  51 0060 E103002A 		mov	w1, w0
+  52 0064 00000090 		adrp	x0, .LC2
+  53 0068 00000091 		add	x0, x0, :lo12:.LC2
+  54 006c 00000094 		bl	printf
+  55 0070 08000014 		b	.L3
+  56              	.L2:
+  57 0074 E01F40B9 		ldr	w0, [sp, 28]
+  58 0078 E103002A 		mov	w1, w0
+  59 007c 00000090 		adrp	x0, .LC3
+  60 0080 00000091 		add	x0, x0, :lo12:.LC3
+  61 0084 00000094 		bl	printf
+  62 0088 00000094 		bl	choose
+  63 008c E01F00B9 		str	w0, [sp, 28]
+  64              	.L3:
+  65 0090 E01F40B9 		ldr	w0, [sp, 28]
+  66 0094 FD7BC2A8 		ldp	x29, x30, [sp], 32
+  67              		.cfi_restore 30
+  68              		.cfi_restore 29
+  69              		.cfi_def_cfa_offset 0
+  70 0098 C0035FD6 		ret
+  71              		.cfi_endproc
+  72              	.LFE6:
+  73              		.size	choose, .-choose
+  74              		.align	2
+  75              		.global	upper
+  76              		.type	upper, %function
+  77              	upper:
+  78              	.LFB7:
+  79              		.cfi_startproc
+  80 009c FD7BBDA9 		stp	x29, x30, [sp, -48]!
+  81              		.cfi_def_cfa_offset 48
+  82              		.cfi_offset 29, -48
+  83              		.cfi_offset 30, -40
+  84 00a0 FD030091 		mov	x29, sp
+  85 00a4 E00F00F9 		str	x0, [sp, 24]
+  86 00a8 FF2F00B9 		str	wzr, [sp, 44]
+  87 00ac 1B000014 		b	.L6
+  88              	.L8:
+  89 00b0 E02F80B9 		ldrsw	x0, [sp, 44]
+  90 00b4 E10F40F9 		ldr	x1, [sp, 24]
+  91 00b8 2000008B 		add	x0, x1, x0
+  92 00bc 00004039 		ldrb	w0, [x0]
+  93 00c0 1F800171 		cmp	w0, 96
+  94 00c4 49020054 		bls	.L7
+  95 00c8 E02F80B9 		ldrsw	x0, [sp, 44]
+  96 00cc E10F40F9 		ldr	x1, [sp, 24]
+  97 00d0 2000008B 		add	x0, x1, x0
+  98 00d4 00004039 		ldrb	w0, [x0]
+  99 00d8 1FE80171 		cmp	w0, 122
+ 100 00dc 88010054 		bhi	.L7
+ 101 00e0 E02F80B9 		ldrsw	x0, [sp, 44]
+ 102 00e4 E10F40F9 		ldr	x1, [sp, 24]
 AARCH64 GAS  file.s 			page 3
 
 
- 103 00e8 00004039 		ldrb	w0, [x0]
- 104 00ec 00000094 		bl	toupper
- 105 00f0 E203002A 		mov	w2, w0
- 106 00f4 E02F80B9 		ldrsw	x0, [sp, 44]
- 107 00f8 E10F40F9 		ldr	x1, [sp, 24]
- 108 00fc 2000008B 		add	x0, x1, x0
- 109 0100 411C0012 		and	w1, w2, 255
- 110 0104 01000039 		strb	w1, [x0]
- 111              	.L7:
- 112 0108 E02F40B9 		ldr	w0, [sp, 44]
- 113 010c 00040011 		add	w0, w0, 1
- 114 0110 E02F00B9 		str	w0, [sp, 44]
- 115              	.L6:
- 116 0114 E02F80B9 		ldrsw	x0, [sp, 44]
- 117 0118 E10F40F9 		ldr	x1, [sp, 24]
- 118 011c 2000008B 		add	x0, x1, x0
- 119 0120 00004039 		ldrb	w0, [x0]
- 120 0124 1F000071 		cmp	w0, 0
- 121 0128 21FCFF54 		bne	.L8
- 122 012c 1F2003D5 		nop
- 123 0130 FD7BC3A8 		ldp	x29, x30, [sp], 48
- 124              		.cfi_restore 30
- 125              		.cfi_restore 29
- 126              		.cfi_def_cfa_offset 0
- 127 0134 C0035FD6 		ret
- 128              		.cfi_endproc
- 129              	.LFE7:
- 130              		.size	upper, .-upper
- 131              		.align	2
- 132              		.global	upper2
- 133              		.type	upper2, %function
- 134              	upper2:
- 135              	.LFB8:
- 136              		.cfi_startproc
- 137 0138 FF8300D1 		sub	sp, sp, #32
- 138              		.cfi_def_cfa_offset 32
- 139 013c E00700F9 		str	x0, [sp, 8]
- 140 0140 FF1F00B9 		str	wzr, [sp, 28]
- 141 0144 1A000014 		b	.L10
- 142              	.L12:
- 143 0148 E01F80B9 		ldrsw	x0, [sp, 28]
- 144 014c E10740F9 		ldr	x1, [sp, 8]
- 145 0150 2000008B 		add	x0, x1, x0
- 146 0154 00004039 		ldrb	w0, [x0]
- 147 0158 1F800171 		cmp	w0, 96
- 148 015c 29020054 		bls	.L11
- 149 0160 E01F80B9 		ldrsw	x0, [sp, 28]
- 150 0164 E10740F9 		ldr	x1, [sp, 8]
- 151 0168 2000008B 		add	x0, x1, x0
- 152 016c 00004039 		ldrb	w0, [x0]
- 153 0170 1FE80171 		cmp	w0, 122
- 154 0174 68010054 		bhi	.L11
- 155 0178 E01F80B9 		ldrsw	x0, [sp, 28]
- 156 017c E10740F9 		ldr	x1, [sp, 8]
- 157 0180 2000008B 		add	x0, x1, x0
- 158 0184 01004039 		ldrb	w1, [x0]
- 159 0188 E01F80B9 		ldrsw	x0, [sp, 28]
+ 103 00e8 2000008B 		add	x0, x1, x0
+ 104 00ec 00004039 		ldrb	w0, [x0]
+ 105 00f0 00000094 		bl	toupper
+ 106 00f4 E203002A 		mov	w2, w0
+ 107 00f8 E02F80B9 		ldrsw	x0, [sp, 44]
+ 108 00fc E10F40F9 		ldr	x1, [sp, 24]
+ 109 0100 2000008B 		add	x0, x1, x0
+ 110 0104 411C0012 		and	w1, w2, 255
+ 111 0108 01000039 		strb	w1, [x0]
+ 112              	.L7:
+ 113 010c E02F40B9 		ldr	w0, [sp, 44]
+ 114 0110 00040011 		add	w0, w0, 1
+ 115 0114 E02F00B9 		str	w0, [sp, 44]
+ 116              	.L6:
+ 117 0118 E02F80B9 		ldrsw	x0, [sp, 44]
+ 118 011c E10F40F9 		ldr	x1, [sp, 24]
+ 119 0120 2000008B 		add	x0, x1, x0
+ 120 0124 00004039 		ldrb	w0, [x0]
+ 121 0128 1F000071 		cmp	w0, 0
+ 122 012c 21FCFF54 		bne	.L8
+ 123 0130 1F2003D5 		nop
+ 124 0134 FD7BC3A8 		ldp	x29, x30, [sp], 48
+ 125              		.cfi_restore 30
+ 126              		.cfi_restore 29
+ 127              		.cfi_def_cfa_offset 0
+ 128 0138 C0035FD6 		ret
+ 129              		.cfi_endproc
+ 130              	.LFE7:
+ 131              		.size	upper, .-upper
+ 132              		.align	2
+ 133              		.global	upper2
+ 134              		.type	upper2, %function
+ 135              	upper2:
+ 136              	.LFB8:
+ 137              		.cfi_startproc
+ 138 013c FF8300D1 		sub	sp, sp, #32
+ 139              		.cfi_def_cfa_offset 32
+ 140 0140 E00700F9 		str	x0, [sp, 8]
+ 141 0144 FF1F00B9 		str	wzr, [sp, 28]
+ 142 0148 1A000014 		b	.L10
+ 143              	.L12:
+ 144 014c E01F80B9 		ldrsw	x0, [sp, 28]
+ 145 0150 E10740F9 		ldr	x1, [sp, 8]
+ 146 0154 2000008B 		add	x0, x1, x0
+ 147 0158 00004039 		ldrb	w0, [x0]
+ 148 015c 1F800171 		cmp	w0, 96
+ 149 0160 29020054 		bls	.L11
+ 150 0164 E01F80B9 		ldrsw	x0, [sp, 28]
+ 151 0168 E10740F9 		ldr	x1, [sp, 8]
+ 152 016c 2000008B 		add	x0, x1, x0
+ 153 0170 00004039 		ldrb	w0, [x0]
+ 154 0174 1FE80171 		cmp	w0, 122
+ 155 0178 68010054 		bhi	.L11
+ 156 017c E01F80B9 		ldrsw	x0, [sp, 28]
+ 157 0180 E10740F9 		ldr	x1, [sp, 8]
+ 158 0184 2000008B 		add	x0, x1, x0
+ 159 0188 01004039 		ldrb	w1, [x0]
 AARCH64 GAS  file.s 			page 4
 
 
- 160 018c E20740F9 		ldr	x2, [sp, 8]
- 161 0190 4000008B 		add	x0, x2, x0
- 162 0194 21800051 		sub	w1, w1, #32
- 163 0198 211C0012 		and	w1, w1, 255
- 164 019c 01000039 		strb	w1, [x0]
- 165              	.L11:
- 166 01a0 E01F40B9 		ldr	w0, [sp, 28]
- 167 01a4 00040011 		add	w0, w0, 1
- 168 01a8 E01F00B9 		str	w0, [sp, 28]
- 169              	.L10:
- 170 01ac E01F80B9 		ldrsw	x0, [sp, 28]
- 171 01b0 E10740F9 		ldr	x1, [sp, 8]
- 172 01b4 2000008B 		add	x0, x1, x0
- 173 01b8 00004039 		ldrb	w0, [x0]
- 174 01bc 1F000071 		cmp	w0, 0
- 175 01c0 41FCFF54 		bne	.L12
- 176 01c4 1F2003D5 		nop
- 177 01c8 FF830091 		add	sp, sp, 32
- 178              		.cfi_def_cfa_offset 0
- 179 01cc C0035FD6 		ret
- 180              		.cfi_endproc
- 181              	.LFE8:
- 182              		.size	upper2, .-upper2
- 183              		.section	.rodata
- 184 0079 00000000 		.align	3
- 184      000000
- 185              	.LC4:
- 186 0080 506C6561 		.string	"Please enter the string you would like to use: "
- 186      73652065 
- 186      6E746572 
- 186      20746865 
- 186      20737472 
- 187              		.align	3
- 188              	.LC5:
- 189 00b0 2533315B 		.string	"%31[^\n]"
- 189      5E0A5D00 
- 190              		.align	3
- 191              	.LC6:
- 192 00b8 3D3D3D3D 		.string	"================="
- 192      3D3D3D3D 
- 192      3D3D3D3D 
- 192      3D3D3D3D 
- 192      3D00
- 193 00ca 00000000 		.align	3
- 193      0000
- 194              	.LC7:
- 195 00d0 4F726967 		.string	"Original: %s\n"
- 195      696E616C 
- 195      3A202573 
- 195      0A00
- 196 00de 0000     		.align	3
- 197              	.LC8:
- 198 00e0 4F757470 		.string	"Output: %s\n"
- 198      75743A20 
- 198      25730A00 
- 199              		.text
- 200              		.align	2
+ 160 018c E01F80B9 		ldrsw	x0, [sp, 28]
+ 161 0190 E20740F9 		ldr	x2, [sp, 8]
+ 162 0194 4000008B 		add	x0, x2, x0
+ 163 0198 21800051 		sub	w1, w1, #32
+ 164 019c 211C0012 		and	w1, w1, 255
+ 165 01a0 01000039 		strb	w1, [x0]
+ 166              	.L11:
+ 167 01a4 E01F40B9 		ldr	w0, [sp, 28]
+ 168 01a8 00040011 		add	w0, w0, 1
+ 169 01ac E01F00B9 		str	w0, [sp, 28]
+ 170              	.L10:
+ 171 01b0 E01F80B9 		ldrsw	x0, [sp, 28]
+ 172 01b4 E10740F9 		ldr	x1, [sp, 8]
+ 173 01b8 2000008B 		add	x0, x1, x0
+ 174 01bc 00004039 		ldrb	w0, [x0]
+ 175 01c0 1F000071 		cmp	w0, 0
+ 176 01c4 41FCFF54 		bne	.L12
+ 177 01c8 1F2003D5 		nop
+ 178 01cc FF830091 		add	sp, sp, 32
+ 179              		.cfi_def_cfa_offset 0
+ 180 01d0 C0035FD6 		ret
+ 181              		.cfi_endproc
+ 182              	.LFE8:
+ 183              		.size	upper2, .-upper2
+ 184              		.section	.rodata
+ 185 0079 00000000 		.align	3
+ 185      000000
+ 186              	.LC4:
+ 187 0080 506C6561 		.string	"Please enter the string you would like to use: "
+ 187      73652065 
+ 187      6E746572 
+ 187      20746865 
+ 187      20737472 
+ 188              		.align	3
+ 189              	.LC5:
+ 190 00b0 2533315B 		.string	"%31[^\n]"
+ 190      5E0A5D00 
+ 191              		.align	3
+ 192              	.LC6:
+ 193 00b8 3D3D3D3D 		.string	"================="
+ 193      3D3D3D3D 
+ 193      3D3D3D3D 
+ 193      3D3D3D3D 
+ 193      3D00
+ 194 00ca 00000000 		.align	3
+ 194      0000
+ 195              	.LC7:
+ 196 00d0 4F726967 		.string	"Original: %s\n"
+ 196      696E616C 
+ 196      3A202573 
+ 196      0A00
+ 197 00de 0000     		.align	3
+ 198              	.LC8:
+ 199 00e0 4F757470 		.string	"Output: %s\n"
+ 199      75743A20 
+ 199      25730A00 
+ 200              		.text
 AARCH64 GAS  file.s 			page 5
 
 
- 201              		.global	main
- 202              		.type	main, %function
- 203              	main:
- 204              	.LFB9:
- 205              		.cfi_startproc
- 206 01d0 FD7BBCA9 		stp	x29, x30, [sp, -64]!
- 207              		.cfi_def_cfa_offset 64
- 208              		.cfi_offset 29, -64
- 209              		.cfi_offset 30, -56
- 210 01d4 FD030091 		mov	x29, sp
- 211 01d8 00000090 		adrp	x0, .LC4
- 212 01dc 00000091 		add	x0, x0, :lo12:.LC4
- 213 01e0 00000094 		bl	printf
- 214 01e4 E0630091 		add	x0, sp, 24
- 215 01e8 E10300AA 		mov	x1, x0
- 216 01ec 00000090 		adrp	x0, .LC5
- 217 01f0 00000091 		add	x0, x0, :lo12:.LC5
- 218 01f4 00000094 		bl	__isoc99_scanf
- 219 01f8 00000094 		bl	choose
- 220 01fc E03F00B9 		str	w0, [sp, 60]
- 221 0200 00000090 		adrp	x0, .LC6
- 222 0204 00000091 		add	x0, x0, :lo12:.LC6
- 223 0208 00000094 		bl	puts
- 224 020c E0630091 		add	x0, sp, 24
- 225 0210 E10300AA 		mov	x1, x0
- 226 0214 00000090 		adrp	x0, .LC7
- 227 0218 00000091 		add	x0, x0, :lo12:.LC7
- 228 021c 00000094 		bl	printf
- 229 0220 E03F40B9 		ldr	w0, [sp, 60]
- 230 0224 1F040071 		cmp	w0, 1
- 231 0228 81000054 		bne	.L14
- 232 022c E0630091 		add	x0, sp, 24
- 233 0230 00000094 		bl	upper
- 234 0234 03000014 		b	.L15
- 235              	.L14:
- 236 0238 E0630091 		add	x0, sp, 24
- 237 023c 00000094 		bl	upper2
- 238              	.L15:
- 239 0240 E0630091 		add	x0, sp, 24
- 240 0244 E10300AA 		mov	x1, x0
- 241 0248 00000090 		adrp	x0, .LC8
- 242 024c 00000091 		add	x0, x0, :lo12:.LC8
- 243 0250 00000094 		bl	printf
- 244 0254 00008052 		mov	w0, 0
- 245 0258 FD7BC4A8 		ldp	x29, x30, [sp], 64
- 246              		.cfi_restore 30
- 247              		.cfi_restore 29
- 248              		.cfi_def_cfa_offset 0
- 249 025c C0035FD6 		ret
- 250              		.cfi_endproc
- 251              	.LFE9:
- 252              		.size	main, .-main
- 253              		.ident	"GCC: (Debian 8.3.0-6) 8.3.0"
- 254              		.section	.note.GNU-stack,"",@progbits
+ 201              		.align	2
+ 202              		.global	main
+ 203              		.type	main, %function
+ 204              	main:
+ 205              	.LFB9:
+ 206              		.cfi_startproc
+ 207 01d4 FD7BBCA9 		stp	x29, x30, [sp, -64]!
+ 208              		.cfi_def_cfa_offset 64
+ 209              		.cfi_offset 29, -64
+ 210              		.cfi_offset 30, -56
+ 211 01d8 FD030091 		mov	x29, sp
+ 212 01dc 00000090 		adrp	x0, .LC4
+ 213 01e0 00000091 		add	x0, x0, :lo12:.LC4
+ 214 01e4 00000094 		bl	printf
+ 215 01e8 E0630091 		add	x0, sp, 24
+ 216 01ec E10300AA 		mov	x1, x0
+ 217 01f0 00000090 		adrp	x0, .LC5
+ 218 01f4 00000091 		add	x0, x0, :lo12:.LC5
+ 219 01f8 00000094 		bl	__isoc99_scanf
+ 220 01fc 00000094 		bl	choose
+ 221 0200 E03F00B9 		str	w0, [sp, 60]
+ 222 0204 00000090 		adrp	x0, .LC6
+ 223 0208 00000091 		add	x0, x0, :lo12:.LC6
+ 224 020c 00000094 		bl	puts
+ 225 0210 E0630091 		add	x0, sp, 24
+ 226 0214 E10300AA 		mov	x1, x0
+ 227 0218 00000090 		adrp	x0, .LC7
+ 228 021c 00000091 		add	x0, x0, :lo12:.LC7
+ 229 0220 00000094 		bl	printf
+ 230 0224 E03F40B9 		ldr	w0, [sp, 60]
+ 231 0228 1F040071 		cmp	w0, 1
+ 232 022c 81000054 		bne	.L14
+ 233 0230 E0630091 		add	x0, sp, 24
+ 234 0234 00000094 		bl	upper
+ 235 0238 03000014 		b	.L15
+ 236              	.L14:
+ 237 023c E0630091 		add	x0, sp, 24
+ 238 0240 00000094 		bl	upper2
+ 239              	.L15:
+ 240 0244 E0630091 		add	x0, sp, 24
+ 241 0248 E10300AA 		mov	x1, x0
+ 242 024c 00000090 		adrp	x0, .LC8
+ 243 0250 00000091 		add	x0, x0, :lo12:.LC8
+ 244 0254 00000094 		bl	printf
+ 245 0258 00008052 		mov	w0, 0
+ 246 025c FD7BC4A8 		ldp	x29, x30, [sp], 64
+ 247              		.cfi_restore 30
+ 248              		.cfi_restore 29
+ 249              		.cfi_def_cfa_offset 0
+ 250 0260 C0035FD6 		ret
+ 251              		.cfi_endproc
+ 252              	.LFE9:
+ 253              		.size	main, .-main
+ 254              		.align	2
+ 255              		.global	flush
+ 256              		.type	flush, %function
+ 257              	flush:
 AARCH64 GAS  file.s 			page 6
+
+
+ 258              	.LFB10:
+ 259              		.cfi_startproc
+ 260 0264 FD7BBEA9 		stp	x29, x30, [sp, -32]!
+ 261              		.cfi_def_cfa_offset 32
+ 262              		.cfi_offset 29, -32
+ 263              		.cfi_offset 30, -24
+ 264 0268 FD030091 		mov	x29, sp
+ 265 026c 1F2003D5 		nop
+ 266              	.L18:
+ 267 0270 00000094 		bl	getchar
+ 268 0274 E07F0039 		strb	w0, [sp, 31]
+ 269 0278 E07F4039 		ldrb	w0, [sp, 31]
+ 270 027c 1F280071 		cmp	w0, 10
+ 271 0280 81FFFF54 		bne	.L18
+ 272 0284 1F2003D5 		nop
+ 273 0288 FD7BC2A8 		ldp	x29, x30, [sp], 32
+ 274              		.cfi_restore 30
+ 275              		.cfi_restore 29
+ 276              		.cfi_def_cfa_offset 0
+ 277 028c C0035FD6 		ret
+ 278              		.cfi_endproc
+ 279              	.LFE10:
+ 280              		.size	flush, .-flush
+ 281              		.ident	"GCC: (Debian 8.3.0-6) 8.3.0"
+ 282              		.section	.note.GNU-stack,"",@progbits
+AARCH64 GAS  file.s 			page 7
 
 
 DEFINED SYMBOLS
@@ -303,9 +334,10 @@ DEFINED SYMBOLS
               file.s:5      .rodata:0000000000000000 $d
               file.s:18     .text:0000000000000000 $x
               file.s:21     .text:0000000000000000 choose
-              file.s:76     .text:0000000000000098 upper
-              file.s:134    .text:0000000000000138 upper2
-              file.s:203    .text:00000000000001d0 main
+              file.s:257    .text:0000000000000264 flush
+              file.s:77     .text:000000000000009c upper
+              file.s:135    .text:000000000000013c upper2
+              file.s:204    .text:00000000000001d4 main
                         .eh_frame:0000000000000014 $d
 
 UNDEFINED SYMBOLS
@@ -313,3 +345,4 @@ puts
 __isoc99_scanf
 printf
 toupper
+getchar
