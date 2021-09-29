@@ -5,7 +5,7 @@ echo "Enter Your file name without extension: "
 read x
 gcc ${x}.c -S -o ${x}.s;
 as -a ${x}.s > ${x}.lst;
-gcc ${x}.c -o ${x};
+#gcc ${x}.c -o ${x};
 rm a.out;
 cd /home/pi/Desktop/CSC-241/
 zip -r output.zip ${y};
