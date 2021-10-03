@@ -8,7 +8,6 @@ cd /home/pi/Desktop/CSC-241/${y};
 #gcc ${x}.c -o ${x};
 #rm a.out;
 cd /home/pi/Desktop/CSC-241/;
-rm output.zip;
-zip -r ${y}.zip ${y};
+zip -r zips/${y}.zip ${y};
 ./github.sh;
 echo "Complete!"
