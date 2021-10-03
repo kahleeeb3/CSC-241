@@ -9,6 +9,6 @@ cd /home/pi/Desktop/CSC-241/${y};
 #rm a.out;
 cd /home/pi/Desktop/CSC-241/;
 rm output.zip;
-zip -r ${y}.zip ${y}/;
+zip -r ${y}.zip ${y};
 ./github.sh;
 echo "Complete!"
