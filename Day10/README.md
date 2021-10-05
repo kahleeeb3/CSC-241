@@ -30,7 +30,7 @@ main:
 <script>
       axios({
       method: 'get',
-      url: 'https://raw.githubusercontent.com/iotify/nsim-examples/master/functional-testing/alarm-server.js'
+      url: 'https://raw.githubusercontent.com/kahleeeb3/CSC-241/main/Day10/hello.asm'
        })
       .then(function (response) {
          document.getElementById("code-element").innerHTML = response.data;
