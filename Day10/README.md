@@ -1,6 +1,9 @@
 # Day 10 Notes
 
-## New File
+## mathandstuff.asm
 
-```assembly hello.asm
+```
+as mathandstuff.asm -g -o mathandstuff.o
+gcc -static -g mathandstuff.o -o mathandstuff
+./mathandstuff
 ```
