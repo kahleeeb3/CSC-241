@@ -1,6 +1,6 @@
-echo "Enter folder name in /home/pi/Desktop/CSC-241/"
+echo "Enter folder name in /home/pi/Desktop/CSC-241/Assignments"
 read y
-cd /home/pi/Desktop/CSC-241/${y};
+cd /home/pi/Desktop/CSC-241//Assignments/${y};
 #echo "Enter Your file name without extension: "
 #read x
 #gcc ${x}.c -S -o ${x}.s;
@@ -8,6 +8,7 @@ cd /home/pi/Desktop/CSC-241/${y};
 #gcc ${x}.c -o ${x};
 #rm a.out;
 cd /home/pi/Desktop/CSC-241/;
-zip -r zips/${y}.zip ${y};
+rm zips/${y}.zip
+zip -r zips/${y}.zip Assignments/${y};
 ./github.sh;
 echo "Complete!"
