@@ -1,0 +1,55 @@
+AARCH64 GAS  mov.asm 			page 1
+
+
+   1              	.data
+   2              	
+   3 0000 54686520 	str1: .asciz "The number loaded using MOVZ and MOVK is %lx\n"
+   3      6E756D62 
+   3      6572206C 
+   3      6F616465 
+   3      64207573 
+   4 002e 54686520 	str2: .asciz "The number loaded using MOVN is %i\n"
+   4      6E756D62 
+   4      6572206C 
+   4      6F616465 
+   4      64207573 
+   5              	
+   6              	.text
+   7              	
+   8              	.global main
+   9              	
+  10              	main:
+  11              	
+  12 0000 FD7BBFA9 	    stp x29,x30,[sp,#-16]! // Store Pair // Leave bread crumb
+  13              	
+  14 0004 E1DD97D2 	    movz x1, #0xBEEF
+  15 0008 A1D5BBF2 	    movk x1, #0xDEAD, lsl #16
+  16 000c C15BD9F2 	    movk x1, #0xCADE, lsl #32
+  17 0010 A1DDFFF2 	    movk x1, #0xFEED, lsl #48
+  18 0014 20010058 	    ldr x0,= str1 // address of format string is x0
+  19 0018 00000094 	    bl printf // Print the format string
+  20              	
+  21 001c E1E48012 	    movn w1, #1831
+  22 0020 00010058 	    ldr x0,= str2 // address of format string is x0
+  23 0024 00000094 	    bl printf // Print the format string
+  24              	
+  25              	    // This should be at the end of every file
+  26 0028 FD7BC1A8 	    ldp x29,x30,[sp],16 // Pick up bread crumb
+  27 002c 00008052 	    mov w0,#0 //Moving zero into register w0
+  28 0030 C0035FD6 	    ret
+  28      00000000 
+  28      00000000 
+  28      00000000 
+  28      00000000 
+AARCH64 GAS  mov.asm 			page 2
+
+
+DEFINED SYMBOLS
+             mov.asm:3      .data:0000000000000000 str1
+             mov.asm:4      .data:000000000000002e str2
+             mov.asm:10     .text:0000000000000000 main
+             mov.asm:12     .text:0000000000000000 $x
+             mov.asm:28     .text:0000000000000038 $d
+
+UNDEFINED SYMBOLS
+printf

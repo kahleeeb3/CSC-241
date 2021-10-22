@@ -1,4 +1,24 @@
 # CSC-241 Commands
+## From Assembly Code
+assemble the code to produce a .o file
+```
+as -g add.asm -o add.o
+```
+
+use GCC to link it and produce an executable
+```
+gcc -static -g add.o -o add
+```
+
+assemble it to produce a listing file
+```
+as -a add.asm > add.lst
+```
+execute your code to make sure it works
+```
+./hello1
+```
+## From C Code
 An assembly aarch64 .s file
 ```
 gcc file.c -S -o file.s
