@@ -16,7 +16,7 @@ as -a add.asm > add.lst
 ```
 execute your code to make sure it works
 ```
-./hello1
+./add
 ```
 ## From C Code
 An assembly aarch64 .s file
