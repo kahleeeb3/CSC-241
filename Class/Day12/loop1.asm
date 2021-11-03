@@ -1,18 +1,38 @@
+.data
+
+str1: .asciz "This is a string\n"
+
+
+.text
+
+.global main
+
 main:
     stp x29, x30, [sp,#-16]!
-    mov x20,#0
-    mov x21,#1
-    mov x22,#5
+    mov x1,#0
+    mov x2,#1
+    mov x3,#5
 
 loop:
-    cmp x20,x22
+    cmp x1,x3
     b.ge end
     ldr x0, =str1
+
+    stp x1, x2, [sp,#-16]!
+    mrs x4,NZCV // takes value from register
+    stp x3,x4, [sp,#-16]!
+
     bl printf
-    add x20,x20,x21
+
+    ldp x3,x4,[sp],#16
+    msr NZCV, x4
+    ldp x1,x2,[sp],#16
+
+    add x1,x1,x2
     b loop
 
 end:
-    ldp x29, x30, [sp],#16
+    ldp x29, x30,[sp],#16
     mov w0,#0
     ret
+    
