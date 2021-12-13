@@ -1,0 +1,100 @@
+AARCH64 GAS  file.asm 			page 1
+
+
+   1              	.data
+   2 0000 30782530 	  str: .asciz "0x%016lx%016lx + 0x%016lx%016lx = 0x%016lx%016lx\n"
+   2      31366C78 
+   2      25303136 
+   2      6C78202B 
+   2      20307825 
+   3 0032 46696E61 	  str1: .asciz "Final Carry: True\n"
+   3      6C204361 
+   3      7272793A 
+   3      20547275 
+   3      650A00
+   4 0045 46696E61 	  str2: .asciz "Final Carry: False\n"
+   4      6C204361 
+   4      7272793A 
+   4      2046616C 
+   4      73650A00 
+   5              	 
+   6              	.text
+   7              	
+   8              	.global main
+   9              	
+  10              	main:
+  11              	  //standard start for our class
+  12 0000 FD7BBFA9 	  stp x29,x30,[sp,#-16]!
+  13              	  
+  14              	  //loads x1
+  15 0004 E1FF9FD2 	  movz x1, #0xFFFF
+  16 0008 E1FFBFF2 	  movk x1, #0xFFFF, lsl #16
+  17 000c E1FFDFF2 	  movk x1, #0xFFFF, lsl #32
+  18 0010 E1FFFFF2 	  movk x1, #0xFFFF, lsl #48
+  19              	  
+  20              	  //loads x2
+  21 0014 E2FF9FD2 	  movz x2, #0xFFFF
+  22 0018 E2FFBFF2 	  movk x2, #0xFFFF, lsl #16
+  23 001c E2FFDFF2 	  movk x2, #0xFFFF, lsl #32
+  24 0020 E2FFFFF2 	  movk x2, #0xFFFF, lsl #48  
+  25              	
+  26              	  //loads x3
+  27 0024 E3FF9FD2 	  movz x3, #0xFFFF
+  28 0028 E3FFBFF2 	  movk x3, #0xFFFF, lsl #16
+  29 002c E3FFDFF2 	  movk x3, #0xFFFF, lsl #32
+  30 0030 E3FFFFF2 	  movk x3, #0xFFFF, lsl #48
+  31              	  
+  32              	  //loads x4
+  33 0034 240080D2 	  movz x4, #0x0001
+  34 0038 0400A0F2 	  movk x4, #0x0000, lsl #16
+  35 003c 0400C0F2 	  movk x4, #0x0000, lsl #32
+  36 0040 0400E0F2 	  movk x4, #0x0000, lsl #48
+  37              	
+  38              	  //the adding portion
+  39 0044 460004AB 	    ADDS x6, x2, x4
+  40 0048 250003BA 	    ADCS x5, x1, x3
+  41 004c 09423BD5 	    mrs x9, NZCV  //loads flag info into reg 9
+  42 0050 E90F1FF8 	    str x9, [sp, #-16]! //stores it
+  43 0054 E0010058 	    ldr x0, =str
+  44 0058 00000094 	    bl printf
+  45              	    
+AARCH64 GAS  file.asm 			page 2
+
+
+  46              	    //checking for carry
+  47 005c E90741F8 	    ldr x9,[sp],#16
+  48 0060 09421BD5 	    msr NZCV,x9
+  49 0064 82000054 	    bcs carry
+  50 0068 80010058 	    ldr x0, =str2
+  51 006c 00000094 	    bl printf
+  52 0070 04000014 	    b end
+  53              	      
+  54              	carry:
+  55 0074 60010058 	  ldr x0,=str1
+  56 0078 00000094 	  bl printf
+  57 007c 01000014 	  b end
+  58              	 
+  59              	end:
+  60              	  //Normal ending sequence
+  61 0080 00008052 	  mov w0,#0
+  62 0084 FD7BC1A8 	  ldp x29,x30,[sp],#16
+  63 0088 C0035FD6 	  ret
+  63      00000000 
+  63      00000000 
+  63      00000000 
+  63      00000000 
+AARCH64 GAS  file.asm 			page 3
+
+
+DEFINED SYMBOLS
+            file.asm:2      .data:0000000000000000 str
+            file.asm:3      .data:0000000000000032 str1
+            file.asm:4      .data:0000000000000045 str2
+            file.asm:10     .text:0000000000000000 main
+            file.asm:12     .text:0000000000000000 $x
+            file.asm:54     .text:0000000000000074 carry
+            file.asm:59     .text:0000000000000080 end
+            file.asm:63     .text:0000000000000090 $d
+
+UNDEFINED SYMBOLS
+printf

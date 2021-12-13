@@ -1,0 +1,88 @@
+AARCH64 GAS  test.asm 			page 1
+
+
+   1              	.data
+   2              	
+   3 0000 496E7075 	plzstr1: .asciz "Input X.\n"
+   3      7420582E 
+   3      0A00
+   4 000a 496E7075 	plzstr2: .asciz "Input Y.\n"
+   4      7420592E 
+   4      0A00
+   5 0014 256C6C69 	instr:   .asciz "%lli"
+   5      00
+   6 0019 42616420 	badstr:  .asciz "Bad values!\n"
+   6      76616C75 
+   6      6573210A 
+   6      00
+   7 0026 4F757470 	goodstr: .asciz "Output is %f\n"
+   7      75742069 
+   7      73202566 
+   7      0A00
+   8 0034 FFFFFFFF 	badval:  .dword 0xFFFFFFFFFFFFFFFF
+   8      FFFFFFFF 
+   9              	
+  10              	.text
+  11              	
+  12              	.global main
+  13              	
+  14              	main:
+  15 0000 FD7BBFA9 	  stp x29, x30, [sp, #-16]!
+  16 0004 FF4300D1 	  sub sp, sp, #16
+  17              	promptuser:
+  18 0008 80020058 	  ldr x0, =plzstr1
+  19 000c 00000094 	  bl  printf
+  20 0010 80020058 	  ldr x0, =instr
+  21 0014 E1030091 	  mov x1, sp
+  22 0018 00000094 	  bl  scanf
+  23 001c 60020058 	  ldr x0, =plzstr2
+  24 0020 00000094 	  bl  printf
+  25 0024 E0010058 	  ldr x0, =instr
+  26 0028 E1030091 	  mov x1, sp
+  27 002c 21200091 	  add x1, x1, #8 // why do this?
+  28 0030 00000094 	  bl  scanf
+  29 0034 E00340F9 	  ldr x0, [sp]
+  30 0038 E10740F9 	  ldr x1, [sp, #8]
+  31              	 // bl  foo
+  32              	 // fmov x0, d0
+  33              	 // ldr x2, =badval
+  34              	 // ldr x1,[x2]
+  35              	 // cmp x0, x1
+  36              	 // b.eq error
+  37              	 // ldr x0, =goodstr
+  38              	 // bl  printf
+  39 003c FF430091 	  add sp, sp, #16
+  40 0040 00008052 	  mov w0, #0
+  41 0044 FD7BC1A8 	  ldp x29, x30, [sp], #16
+  42 0048 C0035FD6 	  ret
+  43              	
+  44              	error:
+  45 004c 20010058 	  ldr x0, =badstr
+AARCH64 GAS  test.asm 			page 2
+
+
+  46 0050 00000094 	  bl  printf
+  47 0054 EDFFFF17 	  b   promptuser...
+  47      00000000 
+  47      00000000 
+  47      00000000 
+  47      00000000 
+AARCH64 GAS  test.asm 			page 3
+
+
+DEFINED SYMBOLS
+            test.asm:3      .data:0000000000000000 plzstr1
+            test.asm:4      .data:000000000000000a plzstr2
+            test.asm:5      .data:0000000000000014 instr
+            test.asm:6      .data:0000000000000019 badstr
+            test.asm:7      .data:0000000000000026 goodstr
+            test.asm:8      .data:0000000000000034 badval
+            test.asm:14     .text:0000000000000000 main
+            test.asm:15     .text:0000000000000000 $x
+            test.asm:17     .text:0000000000000008 promptuser
+            test.asm:44     .text:000000000000004c error
+            test.asm:47     .text:0000000000000058 $d
+
+UNDEFINED SYMBOLS
+printf
+scanf

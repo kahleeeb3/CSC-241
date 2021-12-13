@@ -1,0 +1,153 @@
+AARCH64 GAS  float.asm 			page 1
+
+
+   1              	/*
+   2              	Assignment 0F: Fun with Floats
+   3              	
+   4              	This assignment is motivated by the fast inverse square root trick from Quake III:
+   5              	https://en.wikipedia.org/wiki/Fast_inverse_square_root
+   6              	
+   7              	1. Accepts a floating point number from the user (64 bit), call it X
+   8              	2. Uses built-in ARM commands to compute 1/Sqrt(X)
+   9              	3. Computes 1/sqrt(X) using the Magic Constant
+  10              	4. Outputs all the values with appropriate labeling
+  11              	
+  12              	You'll be doing this with 64 bit doubles, not 32 bit singles. Also, look over the book's example fo
+  13              	*/
+  14              	
+  15              	.data
+  16 0000 A937B5C7 		magic32: .dword 0x5FE6EB50C7B537A9
+  16      50EBE65F 
+  17 0008 54797065 		fmt0: .asciz "Type Your Number: "
+  17      20596F75 
+  17      72204E75 
+  17      6D626572 
+  17      3A2000
+  18 001b 256600   		fmt1: .asciz "%f"
+  19 001e 54686520 		fmt2: .asciz "The InvSqrt is %f\n"
+  19      496E7653 
+  19      71727420 
+  19      69732025 
+  19      660A00
+  20 0031 54686520 		fmt3: .asciz "The InvSqrt is ~%f\n"
+  20      496E7653 
+  20      71727420 
+  20      6973207E 
+  20      25660A00 
+  21              	.text
+  22              	
+  23              	.global main
+  24              	
+  25              	main:
+  26 0000 FD7BBFA9 		stp x29, x30, [sp, #-16]!
+  27              	
+  28              	    /********************************/
+  29              	    // Prompt user to input string
+  30 0004 A0040058 		ldr x0,=fmt0
+  31 0008 00000094 		bl	printf
+  32              	    /********************************/
+  33              		// get the user input
+  34 000c FF8300D1 		add sp,sp,#-32 // Make space in stack pointer for string
+  35 0010 80040058 		ldr x0,=fmt1 // load in the input string
+  36 0014 E1030091 		mov x1,sp
+  37 0018 00000094 		bl scanf
+  38              	    /********************************/
+  39 001c E1030091 	    mov x1,sp // Place user input in x1 for printing
+  40 0020 200040BD 	    ldr s0, [x1] // load register s0 with value in x1
+  41 0024 00C0221E 	    fcvt d0, s0 // convert a 32 bit float to a 64 bit float
+  42              	    /********************************/
+  43              		// calculate invsqrt
+  44 0028 0F000094 		bl sqrt // Pass x0 into the function
+AARCH64 GAS  float.asm 			page 2
+
+
+  45 002c 0140601E 		fmov d1,d0 // move output of function for printing
+  46              	    /********************************/
+  47              		// Print the output
+  48 0030 C0030058 		ldr x0,=fmt2
+  49 0034 00000094 		bl	printf
+  50              		/********************************/
+  51              		// approx invsqrt
+  52              		/////////////////////////////////////////////////////////////
+  53              		// copy user input back into d0
+  54 0038 E1030091 		mov x1,sp // Place user input in x1 for printing
+  55 003c 200040BD 	    ldr s0, [x1] // load register s0 with value in x1
+  56 0040 00C0221E 	    fcvt d0, s0 // convert a 32 bit float to a 64 bit float
+  57              		/////////////////////////////////////////////////////////////
+  58 0044 0E000094 		bl sqrt2 // Pass x0 into the function
+  59 0048 0140601E 		fmov d1,d0 // move output of function for printing
+  60              		/********************************/
+  61              		// Print the output
+  62 004c 20030058 		ldr x0,=fmt3
+  63 0050 00000094 		bl	printf
+  64              		/********************************/
+  65 0054 FF830091 		add sp,sp,#32
+  66 0058 FD7BC1A8 		ldp x29, x30, [sp], #16
+  67 005c 000080D2 		mov x0, #0
+  68 0060 C0035FD6 		ret
+  69              	
+  70              	sqrt:
+  71              	// Uses built-in ARM commands to compute 1/Sqrt(X)
+  72 0064 FD7BBFA9 		stp x29,x30,[sp,#-16]!
+  73 0068 01106E1E 		fmov d1, #1.0
+  74 006c 00C0611E 		fsqrt d0,d0
+  75 0070 2018601E 		fdiv d0,d1,d0
+  76 0074 FD7BC1A8 		ldp x29,x30,[sp],#16
+  77 0078 C0035FD6 		ret
+  78              	
+  79              	sqrt2:
+  80              	// Computes 1/sqrt(X) using the Magic Constant 0x5FE6EB50C7B537A9.
+  81              	// i = * ( long * ) &y;
+  82 007c 0000669E 		FMOV x0,d0
+  83              	// i = 0x5f3759df - ( i >> 1 );
+  84 0080 C1010058 		ldr x1,=magic32
+  85 0084 220040F9 		LDR x2,[x1] // loads magic32 to S2
+  86 0088 00FC41D3 		LSR x0,x0,#1 // shift s0 right by one position
+  87 008c 400000CB 		SUB x0,x2,x0 // subtract shifted number from magic constant
+  88              	// y = * ( float * ) &i;
+  89 0090 0000679E 		FMOV d0,x0
+  90 0094 C0035FD6 		ret
+  91              	
+  92              	/*
+  93              	float Q_rsqrt( float number )
+  94              	{
+  95              		long i;
+  96              		float x2, y;
+  97              		const float threehalfs = 1.5F;
+  98              	
+  99              		x2 = number * 0.5F;
+ 100              		y  = number;
+ 101              		i  = * ( long * ) &y;                       // evil floating point bit level hacking
+AARCH64 GAS  float.asm 			page 3
+
+
+ 102              		i  = 0x5f3759df - ( i >> 1 );               // what the fuck? 
+ 103              		y  = * ( float * ) &i;
+ 104              		y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
+ 105              		//y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+ 106              	
+ 107              		return y;
+ 108              	}
+ 109 0098 00000000 	*/
+ 109      00000000 
+ 109      00000000 
+ 109      00000000 
+ 109      00000000 
+AARCH64 GAS  float.asm 			page 4
+
+
+DEFINED SYMBOLS
+           float.asm:16     .data:0000000000000000 magic32
+           float.asm:17     .data:0000000000000008 fmt0
+           float.asm:18     .data:000000000000001b fmt1
+           float.asm:19     .data:000000000000001e fmt2
+           float.asm:20     .data:0000000000000031 fmt3
+           float.asm:25     .text:0000000000000000 main
+           float.asm:26     .text:0000000000000000 $x
+           float.asm:70     .text:0000000000000064 sqrt
+           float.asm:79     .text:000000000000007c sqrt2
+           float.asm:109    .text:0000000000000098 $d
+
+UNDEFINED SYMBOLS
+printf
+scanf

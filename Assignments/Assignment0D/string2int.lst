@@ -1,0 +1,175 @@
+AARCH64 GAS  string2int.asm 			page 1
+
+
+   1              	.data
+   2              	
+   3 0000 54797065 		fmt0: .asciz "Type Your String:\n"
+   3      20596F75 
+   3      72205374 
+   3      72696E67 
+   3      3A0A00
+   4 0013 596F7572 		fmt: .asciz "Your string as an int: %i\n"
+   4      20737472 
+   4      696E6720 
+   4      61732061 
+   4      6E20696E 
+   5 002e 25313873 		fmt2: .asciz "%18s"
+   5      00
+   6              	
+   7              	.text
+   8              	
+   9              	.global main
+  10              	
+  11              	main:
+  12 0000 FD7BBFA9 		stp x29, x30, [sp, #-16]!
+  13              	main2:
+  14              		/*******************************************/
+  15              		// Prompt user for input
+  16 0004 E0080058 		ldr x0,=fmt0
+  17 0008 00000094 		bl	printf
+  18              		/*******************************************/
+  19              		// get the input	
+  20 000c FF8300D1 		add sp,sp,#-32
+  21 0010 C0080058 		ldr x0,=fmt2
+  22 0014 E1030091 		mov x1,sp
+  23 0018 00000094 		bl scanf
+  24              		//bl flush
+  25              		/*******************************************/
+  26              		// check for proper input
+  27 001c E0030091 		mov x0,sp
+  28 0020 26000094 		bl check
+  29 0024 1F0000F1 		cmp x0,#0
+  30 0028 EBFEFF54 		b.lt main2
+  31              		/*******************************************/
+  32              		// Convert string to int
+  33 002c E0030091 		mov x0, sp
+  34 0030 08000094 		bl str2int
+  35              		// we need whats in w4 to be in x1
+  36              		//str w4,[sp, #-16]!
+  37              		//ldr x1, [sp], #16
+  38 0034 E103042A 		mov w1,w4
+  39              		// print
+  40 0038 C0070058 		ldr x0,=fmt
+  41 003c 00000094 		bl printf
+  42              		/*******************************************/
+  43              		// finish the code
+  44 0040 FF830091 		add sp,sp,#32
+  45 0044 FD7BC1A8 		ldp x29, x30, [sp], #16
+  46 0048 000080D2 		mov x0, #0
+  47 004c C0035FD6 		ret
+  48              	
+AARCH64 GAS  string2int.asm 			page 2
+
+
+  49              	// Convert a string to an int
+  50              	str2int:
+  51 0050 FD7BBFA9 		stp x29,x30,[sp,#-16]!
+  52 0054 010080D2 		mov x1,#0
+  53              		loop2:
+  54 0058 02686138 			ldrb w2,[x0, x1]	//load a byte
+  55 005c 62000034 			cbz w2, convert		//if null terminator, finish function
+  56 0060 21040091 			add x1,x1,#1
+  57 0064 FDFFFF17 			b loop2
+  58              		convert:
+  59 0068 210400D1 			add x1,x1,#-1
+  60 006c 04008052 			mov w4,#0
+  61 0070 25008052 			mov w5,#1 // value to mul by
+  62 0074 46018052 			mov w6,#10
+  63              			loop3:
+  64 0078 02686138 				ldrb w2,[x0, x1]	//load a byte
+  65 007c 5FB40071 				cmp w2,#45 // "-" is 45 in ASCII
+  66 0080 60010054 				b.eq mulneg1 // if(w2==45){mult by -1}else{do next}
+  67 0084 5FAC0071 				cmp w2,#43 // "+" is 43 in ASCII
+  68 0088 80030054 				b.eq end // if(w2==43){end}else{do next}
+  69 008c 43C00051 				add w3,w2,#-48 //not a sign?->Convert char to int
+  70 0090 637C051B 				mul w3,w3,w5
+  71 0094 A57C061B 				mul w5,w5,w6
+  72 0098 8400030B 				add w4,w4,w3
+  73 009c 210400D1 				add x1,x1,#-1
+  74 00a0 3F0000F1 				cmp x1,#0 
+  75 00a4 AB020054 				b.lt end // is x1 < 0? No: loop again, else: end
+  76 00a8 F4FFFF97 				bl loop3
+  77              			mulneg1:
+  78 00ac 01008012 				mov w1,#-1
+  79 00b0 847C011B 				mul w4,w4,w1
+  80 00b4 11000094 				bl end
+  81              	
+  82              	// Check for a valid input from user
+  83              	check:
+  84 00b8 FD7BBFA9 		stp x29,x30,[sp,#-16]!
+  85 00bc 02000014 		b check_sign
+  86 00c0 210080D2 		mov x1, #1		//initialize counter
+  87              		
+  88              		check_sign:
+  89              		// Check if the value in index 0 is "+" or "-"
+  90 00c4 02004039 			ldrb w2,[x0, #0]	//load a byte
+  91 00c8 82010034 			cbz w2, end		//if null terminator, finish function
+  92 00cc 5FB40071 			cmp w2,#45 // "-" is 45 in ASCII
+  93 00d0 A0010054 			b.eq increment // if(w2==45){increment}else{do next}
+  94 00d4 5FAC0071 			cmp w2,#43 // "+" is 43 in ASCII
+  95 00d8 60010054 			b.eq increment // if(w2==43){increment}else{do next}
+  96              		
+  97              		loop:
+  98              	
+  99 00dc 02686138 			ldrb w2,[x0, x1]	//load a byte
+ 100 00e0 C2000034 			cbz w2, end		//if null terminator, finish function
+ 101              	
+ 102              			/*******************************************/
+ 103              			// Checks that value is a number
+ 104 00e4 5FC00071 	        cmp w2,#48 // 0 is 48 in ASCII
+ 105 00e8 2B010054 			b.lt err // if(w2<48){error}else{do next}
+AARCH64 GAS  string2int.asm 			page 3
+
+
+ 106 00ec 5FE40071 			cmp w2,#57 // 9 is 57 in ASCII
+ 107 00f0 EC000054 			b.gt err // if(w2>57){erro}else{do next}
+ 108              			/*******************************************/
+ 109 00f4 04000014 			b increment
+ 110              			//add x1,x1,#1	//increment counter
+ 111              			//b loop
+ 112              	
+ 113              		end:
+ 114              		// end the program
+ 115 00f8 E00301AA 			mov x0,x1
+ 116 00fc FD7BC1A8 			ldp x29,x30,[sp],#16
+ 117 0100 C0035FD6 			ret
+ 118              		increment:
+ 119              		// increment the loop
+ 120 0104 21040091 			add x1,x1,#1
+ 121 0108 F5FFFF17 			b loop
+ 122              	    err:
+ 123              		// if an error in input
+ 124 010c 00008092 			mov x0,#-1
+ 125 0110 FD7BC1A8 			ldp x29,x30,[sp],#16
+ 126 0114 FF830091 			add sp, sp, #32
+ 127 0118 C0035FD6 			ret
+ 127      00000000 
+ 127      00000000 
+ 127      00000000 
+ 127      00000000 
+AARCH64 GAS  string2int.asm 			page 4
+
+
+DEFINED SYMBOLS
+      string2int.asm:3      .data:0000000000000000 fmt0
+      string2int.asm:4      .data:0000000000000013 fmt
+      string2int.asm:5      .data:000000000000002e fmt2
+      string2int.asm:11     .text:0000000000000000 main
+      string2int.asm:12     .text:0000000000000000 $x
+      string2int.asm:13     .text:0000000000000004 main2
+      string2int.asm:83     .text:00000000000000b8 check
+      string2int.asm:50     .text:0000000000000050 str2int
+      string2int.asm:53     .text:0000000000000058 loop2
+      string2int.asm:58     .text:0000000000000068 convert
+      string2int.asm:63     .text:0000000000000078 loop3
+      string2int.asm:77     .text:00000000000000ac mulneg1
+      string2int.asm:113    .text:00000000000000f8 end
+      string2int.asm:88     .text:00000000000000c4 check_sign
+      string2int.asm:118    .text:0000000000000104 increment
+      string2int.asm:97     .text:00000000000000dc loop
+      string2int.asm:122    .text:000000000000010c err
+      string2int.asm:127    .text:0000000000000120 $d
+
+UNDEFINED SYMBOLS
+printf
+scanf

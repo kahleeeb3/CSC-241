@@ -1,0 +1,174 @@
+AARCH64 GAS  int2string.asm 			page 1
+
+
+   1              	.data
+   2              	
+   3 0000 54797065 		fmt0: .asciz "Type Your Int:\n"
+   3      20596F75 
+   3      7220496E 
+   3      743A0A00 
+   4 0010 596F7572 		fmt: .asciz "Your Int as an string: %s\n"
+   4      20496E74 
+   4      20617320 
+   4      616E2073 
+   4      7472696E 
+   5 002b 2531386C 		fmt2: .asciz "%18li"
+   5      6900
+   6              	
+   7              	.text
+   8              	
+   9              	.global main
+  10              	
+  11              	main:
+  12 0000 FD7BBFA9 		stp x29, x30, [sp, #-16]!
+  13              	main2:
+  14              		/*******************************************/
+  15              		// Prompt user for input
+  16 0004 A0080058 		ldr x0,=fmt0
+  17 0008 00000094 		bl	printf
+  18              		/*******************************************/
+  19              		// get the input	
+  20 000c FF8300D1 		add sp,sp,#-32
+  21 0010 80080058 		ldr x0,=fmt2
+  22 0014 E1030091 		mov x1,sp
+  23 0018 00000094 		bl scanf
+  24              		//bl flush
+  25              		/*******************************************/
+  26              		// check for proper input
+  27              		//mov x0,sp
+  28              		//bl check
+  29              		//cmp x0,#0
+  30              		//b.lt main2
+  31              		/*******************************************/
+  32              		// Convert string to int
+  33 001c E00340F9 		ldr x0, [sp]
+  34 0020 FF8300D1 	    add sp,sp,#-32
+  35 0024 E3030091 	    mov x3,sp
+  36 0028 0D000094 		bl int2str
+  37              		// print
+  38              		
+  39 002c E0030091 		mov x0,sp
+  40 0030 FF8300D1 		sub sp,sp,#32
+  41 0034 E3030091 		mov x3,sp
+  42 0038 24000094 		bl flipdabitch
+  43              		
+  44 003c 60070058 		ldr x0,=fmt
+  45 0040 E1030091 	    mov x1,sp
+  46 0044 00000094 		bl printf
+  47              		/*******************************************/
+  48              		// finish the code
+  49 0048 FF030191 		add sp,sp,#64
+AARCH64 GAS  int2string.asm 			page 2
+
+
+  50 004c FF830091 	    add sp,sp,#32
+  51 0050 FD7BC1A8 		ldp x29, x30, [sp], #16
+  52 0054 000080D2 		mov x0, #0
+  53 0058 C0035FD6 		ret
+  54              	
+  55              	// Convert a string to an int
+  56              	int2str:
+  57 005c E60300AA 	    mov x6,x0 // just keep the number in x6 for now
+  58              	        // x0 is where the user input is stored
+  59 0060 010080D2 	    mov x1,#0 // stores the current index
+  60              	        // x2 is where the char is stored
+  61 0064 440180D2 	    mov x4,#10 // stores the value of 10 for division
+  62 0068 FD7BBFA9 		stp x29,x30,[sp,#-16]!
+  63 006c 1F0000F1 	    cmp x0,#0
+  64 0070 2B020054 	    b.lt isnegative
+  65              	    loop:
+  66              	        // x0:25626
+  67 0074 0208C49A 	        udiv x2,x0,x4 // x2:252
+  68 0078 E50302AA 	        mov x5,x2 // x5:252
+  69 007c 427C049B 	        mul x2,x2,x4 // x2:2520
+  70 0080 020002CB 	        sub x2,x0,x2 // x2:2526-2520 = 6
+  71 0084 42C00091 	        add x2,x2,#48 // convert to char
+  72 0088 62682138 	        strb w2, [x3,x1]
+  73 008c 21040091 	        add x1,x1,#1
+  74              	        // if x5 == 0: break
+  75 0090 BF0000F1 	        cmp x5,#0
+  76 0094 60000054 	        b.eq appendneg
+  77 0098 E00305AA 	        mov x0,x5 // x0: 252
+  78 009c F6FFFF17 	        b loop //b
+  79              	
+  80              	// put a neg sign on it if need be
+  81              	appendneg:
+  82 00a0 DF0000F1 	    cmp x6,#0
+  83 00a4 EC000054 	    b.gt end
+  84 00a8 A20580D2 	    mov x2,#45
+  85 00ac 62682138 	    strb w2, [x3,x1]
+  86 00b0 04000014 	    b end
+  87              	
+  88              	
+  89              	isnegative:
+  90 00b4 05008092 	    mov x5,#-1
+  91 00b8 007C059B 	    mul x0,x0,x5
+  92 00bc EEFFFF17 	    b loop
+  93              	
+  94              	end:
+  95 00c0 FD7BC1A8 	    ldp x29,x30,[sp],#16
+  96 00c4 C0035FD6 		ret
+  97              		
+  98              		
+  99              		
+ 100              	flipdabitch:
+ 101 00c8 FD7BBFA9 	    stp x29,x30,[sp,#-16]!
+ 102              	
+ 103 00cc 010080D2 	    mov x1,#0 // current counter
+ 104              	    len:
+ 105              	    // get the length of the string
+ 106 00d0 02686138 	        ldrb w2,[x0, x1] //load a byte
+AARCH64 GAS  int2string.asm 			page 3
+
+
+ 107 00d4 62000034 	        cbz w2, flip
+ 108 00d8 21040091 	        add x1,x1,#1
+ 109 00dc FDFFFF17 	        b len
+ 110              	    flip:
+ 111 00e0 040080D2 	    mov x4, #0 // make x4 start at 0
+ 112 00e4 210400D1 	    sub x1,x1,#1 // make x1 start at length - 1
+ 113              	        flip2:
+ 114 00e8 02686138 	            ldrb w2,[x0,x1] 
+ 115 00ec 62682438 	            strb w2,[x3,x4]
+ 116 00f0 3F0000F1 	            cmp x1,#0
+ 117 00f4 80000054 	            b.eq endflipdabitch
+ 118 00f8 84040091 	            add x4, x4, #1
+ 119 00fc 210400D1 	            sub x1, x1, #1
+ 120 0100 FAFFFF17 	            b flip2
+ 121              		    	
+ 122              	    endflipdabitch:
+ 123 0104 84040091 	    add x4,x4,#1
+ 124 0108 02008052 	    mov w2,#0
+ 125 010c 62682438 	    strb w2, [x3,x4]
+ 126 0110 FD7BC1A8 	    ldp x29,x30,[sp],#16
+ 127 0114 C0035FD6 	    ret
+ 128 0118 00000000 		
+ 128      00000000 
+ 128      00000000 
+ 128      00000000 
+ 128      00000000 
+AARCH64 GAS  int2string.asm 			page 4
+
+
+DEFINED SYMBOLS
+      int2string.asm:3      .data:0000000000000000 fmt0
+      int2string.asm:4      .data:0000000000000010 fmt
+      int2string.asm:5      .data:000000000000002b fmt2
+      int2string.asm:11     .text:0000000000000000 main
+      int2string.asm:12     .text:0000000000000000 $x
+      int2string.asm:13     .text:0000000000000004 main2
+      int2string.asm:56     .text:000000000000005c int2str
+      int2string.asm:100    .text:00000000000000c8 flipdabitch
+      int2string.asm:89     .text:00000000000000b4 isnegative
+      int2string.asm:65     .text:0000000000000074 loop
+      int2string.asm:81     .text:00000000000000a0 appendneg
+      int2string.asm:94     .text:00000000000000c0 end
+      int2string.asm:104    .text:00000000000000d0 len
+      int2string.asm:110    .text:00000000000000e0 flip
+      int2string.asm:113    .text:00000000000000e8 flip2
+      int2string.asm:122    .text:0000000000000104 endflipdabitch
+      int2string.asm:128    .text:0000000000000118 $d
+
+UNDEFINED SYMBOLS
+printf
+scanf

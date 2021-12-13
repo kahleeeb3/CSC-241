@@ -1,0 +1,97 @@
+AARCH64 GAS  fib.asm 			page 1
+
+
+   1              	.data
+   2 0000 54686520 		str: .asciz "The value of Fibonacci number %li is %li\n"
+   2      76616C75 
+   2      65206F66 
+   2      20466962 
+   2      6F6E6163 
+   3              	
+   4              	.text
+   5              	
+   6              	.global main
+   7              	
+   8              	main:
+   9 0000 FD7BBFA9 	    stp x29,x30,[sp,#-16]!
+  10              	
+  11              	    // 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, ...
+  12 0004 000180D2 		mov x0,#8 // x0 = n
+  13 0008 E40300AA 		mov x4,x0 // x4 = n
+  14              	
+  15 000c 07000094 		bl fib // run the fib function
+  16              	
+  17 0010 E20300AA 		mov x2,x0 // x2 = f(n)
+  18              	
+  19 0014 E0030058 		ldr x0,=str // load the string
+  20 0018 00000094 		bl printf // print stuff
+  21 001c FD7BC1A8 		ldp x29,x30,[sp],#16
+  22 0020 00008052 		mov w0,#0 // w0 = 0
+  23 0024 C0035FD6 		ret
+  24              	
+  25              	// x0,x1,x2 used
+  26              	
+  27              	fib:
+  28 0028 FD7BBFA9 		stp x29,x30,[sp,#-16]!
+  29              	
+  30              		// if(x0!=0){do next} else{go to "is_zero"}
+  31 002c 1F0000F1 		cmp x0,#0
+  32 0030 C0000054 		b.eq is_zero 
+  33              	
+  34              		// if(x0!=1){do next} else{go to "is_one"}
+  35 0034 1F0400F1 		cmp x0,#1
+  36 0038 C0000054 		b.eq is_one
+  37              	
+  38              	    // if(x0!=2){do next} else{go to "is_one"}
+  39 003c 1F0800F1 		cmp x0,#2
+  40 0040 80000054 		b.eq is_one
+  41              	
+  42              		// elif statement
+  43 0044 05000014 		b recursive_case
+  44              		
+  45              		is_zero:
+  46 0048 000080D2 			mov x0,#0
+  47 004c 0D000014 			b end
+  48              		is_one:
+  49 0050 200080D2 			mov x0,#1
+  50 0054 0B000014 			b end
+  51              		recursive_case:
+  52              	        // fib(n-1)
+  53 0058 E00F1FF8 	        str x0,[sp,#-16]! // str x0 to stack
+AARCH64 GAS  fib.asm 			page 2
+
+
+  54 005c 000400D1 	        sub x0,x0,#1 // sub 1
+  55 0060 F2FFFF97 	        bl fib // bl fib
+  56 0064 E10741F8 	        ldr x1,[sp],#16 // pop x1 from stack
+  57 0068 E00F1FF8 	        str x0,[sp,#-16]! // push fib(n-1) to stack
+  58              	        // fib(n-2)
+  59 006c 200800D1 	        sub x0,x1,#2 // sub 1 again
+  60 0070 EEFFFF97 	        bl fib // bl fib
+  61 0074 E10741F8 	        ldr x1,[sp],#16 // pop fib(n-1) off stack
+  62 0078 2000008B 	        add x0,x1,x0 // add to fib(n-2)
+  63 007c 01000014 	        b end // return
+  64              		end:
+  65 0080 E10304AA 	        mov x1, x4
+  66 0084 FD7BC1A8 			ldp x29,x30,[sp],#16
+  67 0088 C0035FD6 			ret
+  68              	
+  69 008c 00000000 	
+  69      00000000 
+  69      00000000 
+AARCH64 GAS  fib.asm 			page 3
+
+
+DEFINED SYMBOLS
+             fib.asm:2      .data:0000000000000000 str
+             fib.asm:8      .text:0000000000000000 main
+             fib.asm:9      .text:0000000000000000 $x
+             fib.asm:27     .text:0000000000000028 fib
+             fib.asm:45     .text:0000000000000048 is_zero
+             fib.asm:48     .text:0000000000000050 is_one
+             fib.asm:51     .text:0000000000000058 recursive_case
+             fib.asm:64     .text:0000000000000080 end
+             fib.asm:69     .text:0000000000000090 $d
+
+UNDEFINED SYMBOLS
+printf

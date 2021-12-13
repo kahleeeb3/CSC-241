@@ -1,0 +1,52 @@
+AARCH64 GAS  float.asm 			page 1
+
+
+   1              	.data
+   2              	
+   3 0000 D7A32040 	    mynumber: .word 0x4020A3D7
+   4 0004 4D79206E 		mystring: .asciz "My number is %f\n"
+   4      756D6265 
+   4      72206973 
+   4      2025660A 
+   4      00
+   5              	    // %i for 32 bit int %li for 64 bit int
+   6              	    // you always print a 64 bit float, but we are 32 bits :(
+   7              	.text
+   8              	
+   9              	.global main
+  10              	
+  11              	main:
+  12 0000 FD7BBFA9 	    stp x29,x30,[sp,#-16]!
+  13              	    /********************************/
+  14              	    // using fmov
+  15              	
+  16              	    //fmov s0,#2.5 // floating point mov
+  17              	    //fcvt d0, s0 // take a 32 bit float and expand it to a 64 bit float
+  18              	    /********************************/
+  19              	    // load value from .data
+  20              	    
+  21 0004 20010058 	    ldr x0,=mynumber
+  22 0008 000040BD 	    ldr s0, [x0]
+  23 000c 00C0221E 	    fcvt d0, s0
+  24              	    /********************************/
+  25 0010 00010058 	    ldr x0,=mystring
+  26 0014 00000094 	    bl printf
+  27 0018 FD7BC1A8 	    ldp x29,x30,[sp],#16
+  28 001c 00008052 	    mov w0, #0
+  29 0020 C0035FD6 	    ret
+  29      00000000 
+  29      00000000 
+  29      00000000 
+  29      00000000 
+AARCH64 GAS  float.asm 			page 2
+
+
+DEFINED SYMBOLS
+           float.asm:3      .data:0000000000000000 mynumber
+           float.asm:4      .data:0000000000000004 mystring
+           float.asm:11     .text:0000000000000000 main
+           float.asm:12     .text:0000000000000000 $x
+           float.asm:29     .text:0000000000000028 $d
+
+UNDEFINED SYMBOLS
+printf

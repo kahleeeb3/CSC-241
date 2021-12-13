@@ -1,0 +1,247 @@
+AARCH64 GAS  file.asm 			page 1
+
+
+   1              	.data
+   2              	
+   3 0000 456E7465 	fmt0: .asciz "Enter your number between 0 and 1: \n"
+   3      7220796F 
+   3      7572206E 
+   3      756D6265 
+   3      72206265 
+   4 0025 256C6600 	fmt1: .asciz "%lf"
+   5 0029 5461796C 	fmt2: .asciz "Taylor: %5.20lf\n"
+   5      6F723A20 
+   5      25352E32 
+   5      306C660A 
+   5      00
+   6 003a 41706F6C 	fmt3: .asciz "Apollo: %lf\n"
+   6      6C6F3A20 
+   6      256C660A 
+   6      00
+   7 0047 43686562 	fmt4: .asciz "Cheby: %5.20lf\n"
+   7      793A2025 
+   7      352E3230 
+   7      6C660A00 
+   8              	
+   9 0057 5A000000 	divNum: .dword 0x5A
+   9      00000000 
+  10              	
+  11              	
+  12              	ctabTaylor64:
+  13 005f 182D4454 	  .dword 0x3ff921fb54442d18		//c1
+  13      FB21F93F 
+  14 0067 53BE25E6 	  .dword 0xbfe4abbce625be53		//c3
+  14      BCABE4BF 
+  15 006f E2AA7567 	  .dword 0x3fb466bc6775aae2		//c5
+  15      BC66B43F 
+  16 0077 86BD62CE 	  .dword 0xbf732d2cce62bd86		//c7
+  16      2C2D73BF 
+  17 007f 82E77E48 	  .dword 0x3f250783487ee782		//c9
+  17      8307253F 
+  18 0087 1F87E8FD 	  .dword 0xbece3074fde8871f		//c11
+  18      7430CEBE 
+  19 008f 638D014D 	  .dword 0x3e6e8f434d018d63		//c13
+  19      438F6E3E 
+  20 0097 4457159F 	  .dword 0xbe06fadb9f155744		//c15
+  20      DBFA06BE 
+  21              	  
+  22              	//64 bit Apollo Coefficients
+  23              	ctabApollo64:
+  24 009f C3894391 	  .dword 0x3ff92149914389c3
+  24      4921F93F 
+  25 00a7 BCA13A67 	  .dword 0xbfe49555673aa1bc
+  25      5595E4BF 
+  26 00af 24EB15BB 	  .dword 0x3fb29d22bb15eb24  
+  26      229DB23F 
+  27 00b7 00000000 	  .dword 0x0000000000000000
+  27      00000000 
+  28 00bf 00000000 	  .dword 0x0000000000000000
+  28      00000000 
+  29 00c7 00000000 	  .dword 0x0000000000000000
+AARCH64 GAS  file.asm 			page 2
+
+
+  29      00000000 
+  30 00cf 00000000 	  .dword 0x0000000000000000
+  30      00000000 
+  31 00d7 00000000 	  .dword 0x0000000000000000
+  31      00000000 
+  32              	  
+  33              	//64 bit Chebyshev Coefficients
+  34              	ctabCheby64:
+  35 00df 172D4454 	  .dword 0x3ff921fb54442d17
+  35      FB21F93F 
+  36 00e7 83BD25E6 	  .dword 0xbfe4abbce625bd83
+  36      BCABE4BF 
+  37 00ef BD227567 	  .dword 0x3fb466bc677522bd
+  37      BC66B43F 
+  38 00f7 45A11ECE 	  .dword 0xbf732d2cce1ea145
+  38      2C2D73BF 
+  39 00ff 59690427 	  .dword 0x3f25078327046959
+  39      8307253F 
+  40 0107 2D73DF1B 	  .dword 0xbece30631bdf732d
+  40      6330CEBE 
+  41 010f 7BFE44FE 	  .dword 0x3e6e89f6fe44fe7b
+  41      F6896E3E 
+  42 0117 53B12BD0 	  .dword 0xbe062903d02bb153
+  42      032906BE 
+  43              	
+  44              	.text
+  45              	
+  46              	.global main
+  47              	
+  48              	main:
+  49 0000 FD7BBFA9 		stp x29,x30,[sp,#-16]!
+  50              		
+  51              		// Prompt user to input string
+  52 0004 E0090058 		ldr x0,=fmt0
+  53 0008 00000094 		bl	printf
+  54              	 
+  55              		//get the user input
+  56 000c FF8300D1 		add sp,sp,#-32
+  57 0010 C0090058 		ldr x0,=fmt1
+  58 0014 E1030091 		mov x1,sp
+  59 0018 00000094 		bl scanf
+  60              		
+  61 001c E1030091 	    mov x1,sp // Place user input in x1 for printing
+  62 0020 200040FD 	    ldr d0, [x1] // load register d0 with value in x1
+  63              	    //ldr d1,= divNum
+  64              	    //fdiv d0,d0,d1
+  65              	
+  66              	Taylor:
+  67              									//d0 	x
+  68 0024 0208601E 		fmul 	d2,d0,d0				//d2	x^2
+  69 0028 0308621E 		fmul	d3,d0,d2				//d3 	x^3
+  70 002c 4408621E 		fmul	d4,d2,d2				//d4	x^4
+  71 0030 0540601E 		fmov	d5,d0					//d5	x^1, v5 [x^1,.]
+  72              		
+  73 0034 8404186E 		mov		v4.2d[1],v4.2d[0]		//v4	[x^4,x^4]
+  74 0038 6504186E 		mov		v5.2d[1],v3.2d[0]		//v5	[x^1,x^3]
+  75 003c 86DC656E 		fmul	v6.2d,v4.2d,v5.2d		//v6	[x^5,x^7]
+AARCH64 GAS  file.asm 			page 3
+
+
+  76 0040 C7DC646E 		fmul	v7.2d,v6.2d,v4.2d		//v7	[x^9,x^11]
+  77 0044 E8DC646E 		fmul	v8.2d,v7.2d,v4.2d		//v8	[x^13,x^15]	
+  78              		
+  79 0048 40080058 		ldr 	x0,=ctabTaylor64		
+  80 004c 107CDF4C 		ld1		{v16.2d},[x0],#16		//v16	[c1,c3]
+  81 0050 117CDF4C 		ld1		{v17.2d},[x0],#16		//v17 	[c5,c7]
+  82 0054 127CDF4C 		ld1		{v18.2d},[x0],#16		//v18 	[c9,c11]
+  83 0058 137CDF4C 		ld1		{v19.2d},[x0],#16		//v19	[c13,c15]
+  84              	
+  85 005c 09DE656E 		fmul 	v9.2d,v16.2d,v5.2d		//v9	[c1x,c3x^3]
+  86 0060 29CE664E 		fmla	v9.2d,v17.2d,v6.2d		//v9	[c1x+c5x^5,c3x^3+c7x^7]
+  87 0064 49CE674E 		fmla	v9.2d,v18.2d,v7.2d		//v9	[c1x+c5x^5+c9x^9,c3x^3+c7x^7+c11x^11]
+  88 0068 69CE684E 		fmla	v9.2d,v19.2d,v8.2d		//v9	[c1x+c5x^5+c9x^9+c13x^13,c3x^3+c7x^7+c11x^11+c15x^15]
+  89 006c 20D9707E 		faddp	d0,v9.2d				//d0 has sum
+  90              	
+  91              		//fcvt d0, s0 WAS NOT SUPPOSED TO DO THIS!!!
+  92 0070 40070058 		ldr x0,=fmt2
+  93 0074 00000094 		bl printf
+  94              			
+  95              	apollo:
+  96 0078 E1030091 		mov x1,sp
+  97 007c 200040FD 	    ldr d0, [x1] // load register d0 with value in x1
+  98              	    //fcvt d0, s0 // converts 32bit to 64bit
+  99              	    
+ 100              	    //d0 	x
+ 101 0080 0208601E 		fmul 	d2,d0,d0				//d2	x^2
+ 102 0084 0308621E 		fmul	d3,d0,d2				//d3 	x^3
+ 103 0088 4408621E 		fmul	d4,d2,d2				//d4	x^4
+ 104 008c 0540601E 		fmov	d5,d0					//d5	x^1, v5 [x^1,.]
+ 105              		
+ 106 0090 8404186E 		mov		v4.2d[1],v4.2d[0]		//v4	[x^4,x^4]
+ 107 0094 6504186E 		mov		v5.2d[1],v3.2d[0]		//v5	[x^1,x^3]
+ 108 0098 86DC656E 		fmul	v6.2d,v4.2d,v5.2d		//v6	[x^5,x^7]
+ 109 009c C7DC646E 		fmul	v7.2d,v6.2d,v4.2d		//v7	[x^9,x^11]
+ 110 00a0 E8DC646E 		fmul	v8.2d,v7.2d,v4.2d		//v8	[x^13,x^15]	
+ 111              		
+ 112 00a4 E0050058 		ldr 	x0,=ctabApollo64		
+ 113 00a8 107CDF4C 		ld1		{v16.2d},[x0],#16		//v16	[c1,c3]
+ 114 00ac 117CDF4C 		ld1		{v17.2d},[x0],#16		//v17 	[c5,c7]
+ 115 00b0 127CDF4C 		ld1		{v18.2d},[x0],#16		//v18 	[c9,c11]
+ 116 00b4 137CDF4C 		ld1		{v19.2d},[x0],#16		//v19	[c13,c15]
+ 117              	
+ 118 00b8 09DE656E 		fmul 	v9.2d,v16.2d,v5.2d		//v9	[c1x,c3x^3]
+ 119 00bc 29CE664E 		fmla	v9.2d,v17.2d,v6.2d		//v9	[c1x+c5x^5,c3x^3+c7x^7]
+ 120 00c0 49CE674E 		fmla	v9.2d,v18.2d,v7.2d		//v9	[c1x+c5x^5+c9x^9,c3x^3+c7x^7+c11x^11]
+ 121 00c4 69CE684E 		fmla	v9.2d,v19.2d,v8.2d		//v9	[c1x+c5x^5+c9x^9+c13x^13,c3x^3+c7x^7+c11x^11+c15x^15]
+ 122 00c8 20D9707E 		faddp	d0,v9.2d				//d0 has sum
+ 123              		
+ 124              		//fcvt d0, s0
+ 125 00cc E0040058 		ldr x0,=fmt3
+ 126 00d0 00000094 		bl printf
+ 127              	    
+ 128              		
+ 129              	cheby:
+ 130 00d4 E1030091 		mov x1, sp
+ 131 00d8 200040FD 		ldr d0, [x1] // load register d0 with value in x1
+ 132              	    //fcvt d0, s0 // converts 32bit to 64bit
+AARCH64 GAS  file.asm 			page 4
+
+
+ 133              	    
+ 134              	    //d0 	x
+ 135 00dc 0208601E 		fmul 	d2,d0,d0				//d2	x^2
+ 136 00e0 0308621E 		fmul	d3,d0,d2				//d3 	x^3
+ 137 00e4 4408621E 		fmul	d4,d2,d2				//d4	x^4
+ 138 00e8 0540601E 		fmov	d5,d0					//d5	x^1, v5 [x^1,.]
+ 139              		
+ 140 00ec 8404186E 		mov		v4.2d[1],v4.2d[0]		//v4	[x^4,x^4]
+ 141 00f0 6504186E 		mov		v5.2d[1],v3.2d[0]		//v5	[x^1,x^3]
+ 142 00f4 86DC656E 		fmul	v6.2d,v4.2d,v5.2d		//v6	[x^5,x^7]
+ 143 00f8 C7DC646E 		fmul	v7.2d,v6.2d,v4.2d		//v7	[x^9,x^11]
+ 144 00fc E8DC646E 		fmul	v8.2d,v7.2d,v4.2d		//v8	[x^13,x^15]	
+ 145              		
+ 146 0100 80030058 		ldr 	x0,=ctabCheby64		
+ 147 0104 107CDF4C 		ld1		{v16.2d},[x0],#16		//v16	[c1,c3]
+ 148 0108 117CDF4C 		ld1		{v17.2d},[x0],#16		//v17 	[c5,c7]
+ 149 010c 127CDF4C 		ld1		{v18.2d},[x0],#16		//v18 	[c9,c11]
+ 150 0110 137CDF4C 		ld1		{v19.2d},[x0],#16		//v19	[c13,c15]
+ 151              	
+ 152 0114 09DE656E 		fmul 	v9.2d,v16.2d,v5.2d		//v9	[c1x,c3x^3]
+ 153 0118 29CE664E 		fmla	v9.2d,v17.2d,v6.2d		//v9	[c1x+c5x^5,c3x^3+c7x^7]
+ 154 011c 49CE674E 		fmla	v9.2d,v18.2d,v7.2d		//v9	[c1x+c5x^5+c9x^9,c3x^3+c7x^7+c11x^11]
+ 155 0120 69CE684E 		fmla	v9.2d,v19.2d,v8.2d		//v9	[c1x+c5x^5+c9x^9+c13x^13,c3x^3+c7x^7+c11x^11+c15x^15]
+ 156 0124 20D9707E 		faddp	d0,v9.2d				//d0 has sum
+ 157              		
+ 158              		//fcvt d0, s0
+ 159 0128 80020058 		ldr x0,=fmt4
+ 160 012c 00000094 		bl printf
+ 161              		
+ 162              	end:
+ 163 0130 FF830091 		add sp,sp, #32
+ 164 0134 FD7BC1A8 		ldp x29, x30, [sp], #16
+ 165 0138 000080D2 		mov x0, #0
+ 166 013c C0035FD6 		ret
+ 167              		
+ 168 0140 00000000 	
+ 168      00000000 
+ 168      00000000 
+ 168      00000000 
+ 168      00000000 
+AARCH64 GAS  file.asm 			page 5
+
+
+DEFINED SYMBOLS
+            file.asm:3      .data:0000000000000000 fmt0
+            file.asm:4      .data:0000000000000025 fmt1
+            file.asm:5      .data:0000000000000029 fmt2
+            file.asm:6      .data:000000000000003a fmt3
+            file.asm:7      .data:0000000000000047 fmt4
+            file.asm:9      .data:0000000000000057 divNum
+            file.asm:12     .data:000000000000005f ctabTaylor64
+            file.asm:23     .data:000000000000009f ctabApollo64
+            file.asm:34     .data:00000000000000df ctabCheby64
+            file.asm:48     .text:0000000000000000 main
+            file.asm:49     .text:0000000000000000 $x
+            file.asm:66     .text:0000000000000024 Taylor
+            file.asm:95     .text:0000000000000078 apollo
+            file.asm:129    .text:00000000000000d4 cheby
+            file.asm:162    .text:0000000000000130 end
+            file.asm:168    .text:0000000000000140 $d
+
+UNDEFINED SYMBOLS
+printf
+scanf

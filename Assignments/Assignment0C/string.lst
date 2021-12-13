@@ -1,0 +1,136 @@
+AARCH64 GAS  string.asm 			page 1
+
+
+   1              	.data
+   2 0000 54797065 		fmt0: .asciz "Type Your String:\n"
+   2      20596F75 
+   2      72205374 
+   2      72696E67 
+   2      3A0A00
+   3 0013 255B5E0A 		fmt1: .asciz "%[^\n]31s"
+   3      5D333173 
+   3      00
+   4 001c 4F726967 		fmt2: .asciz "Original: %s, Changed: %s\n"
+   4      696E616C 
+   4      3A202573 
+   4      2C204368 
+   4      616E6765 
+   5              	.text
+   6              	
+   7              	.global main
+   8              	
+   9              	main:
+  10 0000 FD7BBFA9 		stp x29, x30, [sp, #-16]!
+  11              	
+  12              		// Prompt user to input string
+  13 0004 20070058 		ldr x0,=fmt0
+  14 0008 00000094 		bl	printf
+  15              	
+  16 000c FF0301D1 		add sp,sp,#-64 // Make space in stack pointer for string
+  17 0010 00070058 		ldr x0,=fmt1 // load in the input string
+  18 0014 E1030091 		mov x1,sp
+  19 0018 00000094 		bl scanf // get the user input
+  20              	
+  21              		// Copy the string to the upper part of the stack by 16 byte chunks
+  22 001c E00740A9 		ldp x0,x1,[sp]
+  23 0020 E00702A9 		stp x0,x1,[sp,#32]
+  24 0024 E00741A9 		ldp x0,x1,[sp,#16]
+  25 0028 E00703A9 		stp x0,x1,[sp,#48]
+  26              	
+  27 002c E0030091 		mov x0,sp // Place user input in x
+  28              	
+  29              		/* =========================================== */
+  30 0030 0A000094 		bl change // Pass x0 into the change function
+  31              		/* =========================================== */
+  32              		
+  33 0034 E2030091 		mov x2, sp
+  34 0038 E1030091 		mov x1,sp
+  35 003c 21800091 		add x1,x1,#32
+  36              	
+  37 0040 C0050058 		ldr x0,=fmt2
+  38 0044 00000094 		bl	printf
+  39              		
+  40 0048 FF030191 		add sp,sp,#64
+  41 004c FD7BC1A8 		ldp x29, x30, [sp], #16
+  42 0050 000080D2 		mov x0, #0
+  43 0054 C0035FD6 		ret
+  44              	
+  45              	change:
+  46 0058 FD7BBFA9 		stp x29,x30,[sp,#-16]!
+  47 005c 010080D2 		mov x1, #0 //initialize counter
+AARCH64 GAS  string.asm 			page 2
+
+
+  48 0060 360080D2 		mov x22,#1 // even = True
+  49              		loop:
+  50              			
+  51 0064 02686138 			ldrb w2,[x0, x1] //load a byte
+  52 0068 82030034 			cbz w2, end	//if null terminator, finish function
+  53              	
+  54 006c DF0600F1 			cmp x22,#1 // detect if even
+  55 0070 80000054 			b.eq is_even					// This can be done a lot easier I just dont know how
+  56 0074 DF0200F1 			cmp x22,#0 // detect if odd
+  57 0078 20010054 			b.eq is_odd
+  58              	
+  59 007c 0F000014 			b increment
+  60              	
+  61              		is_even: //if((w2>A) && (w2<Z)){str[i]+32} // A = 65, Z = 90
+  62 0080 5F040171 			cmp w2,#65 // Z is 90 in ASCII
+  63 0084 EB010054 			b.lt increment_e // if(w2<65){increment}else{do next}
+  64 0088 5F680171 			cmp w2,#90 // Z is 90 in ASCII
+  65 008c AC010054 			b.gt increment_e // if(w2>90){increment}else{do next}
+  66              	
+  67 0090 42800011 			add w2, w2, #32 // change to lower if upper
+  68 0094 02682138 			strb w2,[x0, x1]
+  69 0098 0A000014 			b increment_e
+  70              		is_odd: //if((w2>a) && (w2<z)){str[i]-32} // a = 97, z = 122
+  71 009c 5F840171 			cmp w2,#97 // Z is 90 in ASCII
+  72 00a0 6B010054 			b.lt increment_o // if(w2<97){increment}else{do next}
+  73 00a4 5FE80171 			cmp w2,#122 // Z is 90 in ASCII
+  74 00a8 2C010054 			b.gt increment_o // if(w2>122){increment}else{do next}
+  75              	
+  76 00ac 42800051 			sub w2, w2, #32 // change to lower if upper
+  77 00b0 02682138 			strb w2,[x0, x1]
+  78 00b4 06000014 			b increment_o
+  79              			
+  80              		increment: // increment the counter
+  81 00b8 21040091 			add x1,x1,#1 //increment counter
+  82 00bc EAFFFF17 			b loop // go back through loop
+  83              		increment_e: // increment that changes even to false
+  84 00c0 160080D2 			mov x22,#0	// set even to true
+  85 00c4 21040091 			add x1,x1,#1 //increment counter
+  86 00c8 E7FFFF17 			b loop	// go back through loop
+  87              		increment_o: // increment that changes even to true
+  88 00cc 360080D2 			mov x22,#1	// set even to true
+  89 00d0 21040091 			add x1,x1,#1 //increment counter
+  90 00d4 E4FFFF17 			b loop // go back through loop
+  91              		end:
+  92 00d8 E00301AA 			mov x0,x1
+  93 00dc FD7BC1A8 			ldp x29,x30,[sp],#16
+  94 00e0 C0035FD6 			ret
+  94      00000000 
+  94      00000000 
+  94      00000000 
+  94      00000000 
+AARCH64 GAS  string.asm 			page 3
+
+
+DEFINED SYMBOLS
+          string.asm:2      .data:0000000000000000 fmt0
+          string.asm:3      .data:0000000000000013 fmt1
+          string.asm:4      .data:000000000000001c fmt2
+          string.asm:9      .text:0000000000000000 main
+          string.asm:10     .text:0000000000000000 $x
+          string.asm:45     .text:0000000000000058 change
+          string.asm:49     .text:0000000000000064 loop
+          string.asm:91     .text:00000000000000d8 end
+          string.asm:61     .text:0000000000000080 is_even
+          string.asm:70     .text:000000000000009c is_odd
+          string.asm:80     .text:00000000000000b8 increment
+          string.asm:83     .text:00000000000000c0 increment_e
+          string.asm:87     .text:00000000000000cc increment_o
+          string.asm:94     .text:00000000000000e8 $d
+
+UNDEFINED SYMBOLS
+printf
+scanf
